@@ -9,6 +9,8 @@ export interface ContentMeta {
   description?: string
   date?: string
   author?: string
+  authorEmail?: string
+  authorBio?: string
   image?: string
   tags?: string[]
   draft?: boolean

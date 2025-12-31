@@ -37,7 +37,7 @@ export function Header() {
         <div className="flex items-center gap-x-2 pr-2.5">
           <a data-testid="header-logo" className="px-1 py-1" href="/">
             <span className="sr-only">Home</span>
-           {siteConfig.logo}
+            {siteConfig.logo}
           </a>
         </div>
 
@@ -46,6 +46,15 @@ export function Header() {
             <nav aria-label="Main" className="group/navigation-menu absolute pointer-events-none [&>*]:pointer-events-auto inset-x-0 flex justify-center">
               <div style={{ position: 'relative' }}>
                 <ul className="group flex flex-1 list-none items-center justify-center gap-1">
+                  <li className="relative">
+                    <a
+                      href="/blog"
+                      data-active={pathname === "/blog" || pathname.startsWith("/blog")}
+                      className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+                    >
+                      Blog
+                    </a>
+                  </li>
                   <li className="relative">
                     <a
                       href="/docs"
@@ -106,9 +115,8 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {/*Search Button matching visual */}
-        <SearchButton />
-
-         
+          <SearchButton />
+          <ThemeToggle />
         </div>
       </div>
     </header>

@@ -1,61 +1,94 @@
 
 import { getAllContent } from "@/lib/content"
-import Link from "next/link"
+import { BlogCard } from "@/components/blog-card"
 import type { Metadata } from "next"
+import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Blog",
   description: "Read my thoughts on software development, design, and more.",
 }
 
-export default function BlogPage() {
-  const posts = getAllContent("blog")
+interface BlogPageProps {
+  searchParams: Promise<{ tag?: string }>
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const { tag } = await searchParams
+  const allPosts = getAllContent("blog")
+
+  const filteredPosts = tag
+    ? allPosts.filter(post => post.meta.tags?.some(t => t.toLowerCase() === tag.toLowerCase()))
+    : allPosts
 
   return (
     <>
-      <main className="flex-1">
-        <div className="mx-auto max-w-3xl px-6 py-16 md:px-8 md:py-24">
-          <header className="mb-12">
-            <h1 className="text-[28px] font-semibold tracking-[-0.02em] md:text-[32px]">Writing</h1>
-            <p className="mt-2 text-[15px] text-foreground/60">Thoughts on code, design, and building products.</p>
-          </header>
+      <main className="mx-auto w-full max-w-5xl px-4 pt-12 pb-24">
+        <header className="mb-16 text-center">
+          <div className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+            {tag ? `Topic: ${tag}` : "The Blog"}
+          </div>
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-7xl mb-6">
+            {tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : "Writing & Thoughts"}
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed italic">
+            "Deep dives into software engineering, product design, and the future of web development."
+          </p>
 
-          {posts.length > 0 ? (
-            <div className="space-y-0 divide-y divide-border/40">
-              {posts.map((post) => (
-                <article key={post.slug} className="group py-5 first:pt-0">
-                  <Link href={`/blog/${post.slug}`} className="block">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <h2 className="text-[17px] font-medium text-foreground/90 transition-colors duration-100 group-hover:text-primary">
-                        {post.meta.title}
-                      </h2>
-                      <time className="shrink-0 text-[13px] tabular-nums text-foreground/40">
-                        {post.meta.date
-                          ? new Date(post.meta.date).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })
-                          : ""}
-                      </time>
-                    </div>
-                    {post.meta.description && (
-                      <p className="mt-1.5 text-[14px] leading-relaxed text-foreground/50 line-clamp-2">
-                        {post.meta.description}
-                      </p>
-                    )}
-                  </Link>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-dashed border-border/40 py-16 text-center">
-              <p className="text-[14px] text-foreground/50">
-                No posts yet. Add .mdx files to content/blog/ to get started.
-              </p>
+          <nav className="mt-12 flex items-center justify-center gap-2 overflow-x-auto pb-4 scrollbar-hide py-3">
+            <Link
+              href="/blog"
+              className={cn(
+                "whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+                !tag
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              All Posts
+            </Link>
+            {["Introduction", "Tech", "AI", "Design"].map((topic) => (
+              <Link
+                key={topic}
+                href={`/blog?tag=${topic.toLowerCase()}`}
+                className={cn(
+                  "whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+                  tag?.toLowerCase() === topic.toLowerCase()
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {topic}
+              </Link>
+            ))}
+          </nav>
+
+          {tag && (
+            <div className="mt-6">
+              <Link href="/blog" className="text-sm font-medium text-primary hover:underline flex items-center justify-center gap-2">
+                &larr; View all posts
+              </Link>
             </div>
           )}
-        </div>
+        </header>
+
+        {filteredPosts.length > 0 ? (
+          <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-2">
+            {filteredPosts.map((post, index) => (
+              <BlogCard key={post.slug} post={post} featured={index === 0 && !tag} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border/40 py-24 text-center">
+            <p className="text-base text-muted-foreground italic mb-4">
+              "No posts found for this topic yet."
+            </p>
+            <Link href="/blog" className="text-primary font-bold hover:underline">
+              Clear filters
+            </Link>
+          </div>
+        )}
       </main>
     </>
   )

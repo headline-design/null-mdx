@@ -1,179 +1,130 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Calendar, Clock, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
-const categories = ["All", "Engineering", "Design", "Product", "Company"]
+const categories = ["All", "Engineering", "Design", "Product", "General"]
 
-const featuredPost = {
-  title: "Introducing our new design system",
-  description:
-    "A comprehensive guide to our refreshed visual language and component library that powers all our products.",
-  date: "December 20, 2024",
-  readTime: "8 min read",
-  author: "Sarah Chen",
-  category: "Design",
-  image: "/abstract-dark-gradient-product-launch.jpg",
-  href: "#",
-}
-
-const posts = [
-  {
-    title: "Building performant React applications",
-    description: "Learn the techniques and patterns we use to build fast, responsive user interfaces.",
-    date: "December 18, 2024",
-    readTime: "6 min read",
-    author: "Alex Rivera",
-    category: "Engineering",
-    href: "#",
-  },
-  {
-    title: "Our approach to product development",
-    description: "How we balance user needs, business goals, and technical constraints.",
-    date: "December 15, 2024",
-    readTime: "5 min read",
-    author: "Jordan Lee",
-    category: "Product",
-    href: "#",
-  },
-  {
-    title: "Scaling our infrastructure",
-    description: "The architectural decisions that helped us grow to millions of users.",
-    date: "December 12, 2024",
-    readTime: "10 min read",
-    author: "Morgan Kim",
-    category: "Engineering",
-    href: "#",
-  },
-  {
-    title: "Designing for accessibility",
-    description: "Making our products usable by everyone, regardless of ability.",
-    date: "December 10, 2024",
-    readTime: "7 min read",
-    author: "Taylor Park",
-    category: "Design",
-    href: "#",
-  },
-]
+import { getAllContent } from "@/lib/content"
 
 export default function BlogEntryPage() {
+  const allPosts = getAllContent("blog")
+  const featuredPost = allPosts[0]
+  const recentPosts = allPosts.slice(1, 3)
+  const categories = ["All", "Introduction", "Tech", "AI", "Design"]
   return (
-    <>
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="py-12 md:py-16 border-b border-border">
-          <div className="container max-w-6xl mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">Blog</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Insights, tutorials, and updates from our team. Learn how we build products and solve problems.
-            </p>
-          </div>
-        </section>
+    <main className="mx-auto w-full max-w-5xl px-4 pt-12 pb-24">
+      <header className="mb-16 text-center">
+        <div className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+          The Blog
+        </div>
+        <h1 className="text-4xl font-extrabold tracking-tight lg:text-7xl mb-6">
+          Insights from the edge.
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed italic">
+          "Deep dives into software engineering, product design, and the future of web development."
+        </p>
 
-        {/* Categories */}
-        <section className="py-6 border-b border-border sticky top-16 bg-background/95 backdrop-blur z-40">
-          <div className="container max-w-6xl mx-auto px-4">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {categories.map((category, i) => (
-                <Button key={category} variant={i === 0 ? "default" : "outline"} size="sm" className="shrink-0">
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </section>
+        <nav className="mt-12 flex items-center justify-center gap-2 overflow-x-auto pb-4 scrollbar-hide py-3">
+          {categories.map((cat, i) => (
+            <button
+              key={cat}
+              className={cn(
+                "whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+                i === 0
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </nav>
+      </header>
 
-        {/* Featured Post */}
-        <section className="py-12 border-b border-border">
-          <div className="container max-w-6xl mx-auto px-4">
-            <Link href={featuredPost.href} className="group block">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-muted">
-                  <Image
-                    src={featuredPost.image || "/placeholder.svg"}
-                    alt={featuredPost.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div>
-                  <Badge className="mb-4">{featuredPost.category}</Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {featuredPost.title}
-                  </h2>
-                  <p className="text-muted-foreground mb-4">{featuredPost.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <User className="w-4 h-4" />
-                      {featuredPost.author}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {featuredPost.date}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {featuredPost.readTime}
-                    </span>
-                  </div>
-                </div>
+      {/* Featured Post */}
+      <section className="mb-24">
+        <Link href={`/blog/${featuredPost.slug}`} className="group block relative">
+          <div className="relative aspect-[21/9] rounded-3xl overflow-hidden border border-border/40 shadow-2xl mb-10">
+            <Image
+              src={featuredPost.meta.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"}
+              alt={featuredPost.meta.title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute bottom-8 left-8 right-8">
+              <Badge className="mb-4 bg-primary text-primary-foreground border-none px-3 py-1">Feature</Badge>
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
+                {featuredPost.meta.title}
+              </h2>
+              <div className="flex items-center gap-4 text-sm text-white/60">
+                <span className="font-bold text-white">{featuredPost.meta.author}</span>
+                <span className="opacity-40">·</span>
+                <span>{featuredPost.meta.date}</span>
               </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* Posts Grid */}
-        <section className="py-12">
-          <div className="container max-w-6xl mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-8">
-              {posts.map((post) => (
-                <Link key={post.title} href={post.href} className="group block">
-                  <article className="h-full p-6 rounded-xl border border-border bg-card hover:border-primary/50 transition-colors">
-                    <Badge variant="secondary" className="mb-3">
-                      {post.category}
-                    </Badge>
-                    <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">{post.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{post.author}</span>
-                      <span>·</span>
-                      <span>{post.date}</span>
-                      <span>·</span>
-                      <span>{post.readTime}</span>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-            <div className="mt-8 text-center">
-              <Button variant="outline" className="gap-2 bg-transparent">
-                Load more posts
-                <ArrowRight className="w-4 h-4" />
-              </Button>
             </div>
           </div>
-        </section>
+        </Link>
+      </section>
 
-        {/* Newsletter */}
-        <section className="py-12 border-t border-border">
-          <div className="container max-w-6xl mx-auto px-4">
-            <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-foreground mb-3">Subscribe to our newsletter</h2>
-              <p className="text-muted-foreground mb-6">
-                Get the latest posts delivered straight to your inbox. No spam, unsubscribe anytime.
+      {/* Posts Grid */}
+      <section className="grid sm:grid-cols-2 gap-x-12 gap-y-20 mb-24">
+        {recentPosts.map((post) => (
+          <Link key={post.slug} href={`/blog/${post.slug}`} className="group flex flex-col gap-6">
+            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-border/30 bg-muted/20 shadow-sm">
+              <Image
+                src={post.meta.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"}
+                alt={post.meta.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                {post.meta.tags?.map(tag => (
+                  <Badge key={tag} variant="secondary" className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <h3 className="text-2xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
+                {post.meta.title}
+              </h3>
+              <p className="text-muted-foreground line-clamp-2 text-base leading-relaxed italic opacity-80">
+                {post.meta.description}
               </p>
-              <form className="flex gap-3">
-                <Input type="email" placeholder="Enter your email" className="flex-1" />
-                <Button type="submit">Subscribe</Button>
-              </form>
+              <div className="flex items-center gap-3 text-[13px] text-muted-foreground/50 font-medium">
+                <span>{post.meta.date}</span>
+              </div>
             </div>
+          </Link>
+        ))}
+      </section>
+
+      {/* Newsletter */}
+      <section className="mb-12">
+        <div className="relative overflow-hidden rounded-3xl border border-border/40 bg-muted/30 p-10 md:p-16">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-12">
+            <div className="max-w-md">
+              <h3 className="text-3xl font-extrabold mb-3">Join the inner circle</h3>
+              <p className="text-lg text-muted-foreground italic mb-0 leading-relaxed">
+                "The best of our writing, delivered directly to your inbox every month."
+              </p>
+            </div>
+            <form className="flex w-full max-w-sm gap-3">
+              <Input type="email" placeholder="you@example.com" className="h-12 bg-background rounded-xl border-border/60" />
+              <Button size="lg" className="h-12 px-8 rounded-xl font-bold shadow-lg shadow-primary/20">Subscribe</Button>
+            </form>
           </div>
-        </section>
-      </main>
-    </>
+          {/* Background flourish */}
+          <div className="absolute -right-24 -top-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
+          <div className="absolute -left-24 -bottom-24 w-64 h-64 bg-primary/5 blur-[100px] rounded-full" />
+        </div>
+      </section>
+    </main>
   )
 }
+
