@@ -1,0 +1,118 @@
+---
+title: Components Test
+description: Testing the refined MDX components
+---
+
+# Components Test
+
+This page tests the enhanced MDX components.
+
+## Code Blocks
+
+### With Title
+
+```tsx title="components/ui/button.tsx"
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+```
+
+### Without Title
+
+```bash
+npm install next
+```
+
+## Tabs
+
+<Tabs defaultValue="npm">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+  </TabsList>
+  <TabsContent value="npm">
+    ```bash
+    npm install @radix-ui/react-tabs
+    ```
+  </TabsContent>
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm add @radix-ui/react-tabs
+    ```
+  </TabsContent>
+  <TabsContent value="yarn">
+    ```bash
+    yarn add @radix-ui/react-tabs
+    ```
+  </TabsContent>
+</Tabs>
+
+## Callouts
+
+<Callout type="info">
+  This is an **info** callout with some bold text.
+</Callout>
+
+<Callout type="warning">
+  This is a **warning** callout. Proceed with caution.
+</Callout>
+
+<Callout type="error">
+  This is an **error** callout. Something went wrong.
+</Callout>
+
+<Callout type="success">
+  This is a **success** callout. Operation completed.
+</Callout>
+
+## Steps
+
+<Steps>
+
+<Step>
+
+### Run the following command
+
+```bash
+npx create-next-app@latest
+```
+
+</Step>
+
+<Step>
+
+### Configure your project
+
+Follow the prompts to configure your project.
+
+</Step>
+
+</Steps>
+
+## Table
+
+| Prop | Type | Description |
+| :--- | :--- | :--- |
+| `children` | `React.ReactNode` | The content to render |
+| `className` | `string` | Additional CSS classes |
+| `variant` | `default | destructive` | The button variant |
+

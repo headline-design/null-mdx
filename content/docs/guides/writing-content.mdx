@@ -1,0 +1,65 @@
+---
+title: "Writing Content"
+description: "Learn how to write blog posts and documentation."
+order: 2
+---
+
+## Writing Content
+
+Content is written in MDX format, which combines Markdown with React components.
+
+### File Structure
+
+- Blog posts go in `content/blog/`
+- Documentation goes in `content/docs/`
+
+### Frontmatter
+
+Each MDX file starts with frontmatter:
+
+```yaml
+---
+title: "My Post Title"
+description: "A brief description"
+date: "2024-12-22"
+author: "Your Name"
+tags: ["tag1", "tag2"]
+draft: false
+order: 1  # for docs only
+---
+```
+
+### Using Images
+
+Reference images from Supabase Storage:
+
+```markdown
+![Alt text](path/to/image.jpg)
+```
+
+The image path is relative to your Supabase bucket.
+
+### Custom Components
+
+Use the Callout component for important information:
+
+```mdx
+<Callout type="info">
+  This is helpful information.
+</Callout>
+```
+
+Available types: `info`, `warning`, `error`, `success`
+
+<Callout type="success">
+  Your content will automatically be styled with beautiful typography.
+</Callout>
+
+### Code Blocks
+
+Use fenced code blocks with language hints:
+
+````markdown
+```typescript
+const greeting = "Hello, World!"
+```
