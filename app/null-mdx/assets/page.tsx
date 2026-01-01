@@ -29,7 +29,7 @@ export default function AssetsPage() {
 
   const fetchAssets = useCallback(async () => {
     try {
-      const res = await fetch("/api/assets")
+      const res = await fetch("/api/null-mdx/assets")
       if (!res.ok) {
         console.error("Failed to fetch assets: HTTP", res.status)
         setAssets([])
@@ -60,7 +60,7 @@ export default function AssetsPage() {
     }
 
     try {
-      const res = await fetch("/api/assets", {
+      const res = await fetch("/api/null-mdx/assets", {
         method: "POST",
         body: formData,
       })
@@ -77,7 +77,7 @@ export default function AssetsPage() {
 
   const handleDelete = async (path: string) => {
     try {
-      const res = await fetch(`/api/assets?path=${encodeURIComponent(path)}`, {
+      const res = await fetch(`/api/null-mdx/assets?path=${encodeURIComponent(path)}`, {
         method: "DELETE",
       })
 
@@ -90,7 +90,7 @@ export default function AssetsPage() {
   }
 
   const copyUrl = async (name: string) => {
-    const url = `/api/assets/${name}`
+    const url = `/api/null-mdx/assets/${name}`
     await navigator.clipboard.writeText(url)
     setCopiedId(name)
     setTimeout(() => setCopiedId(null), 2000)
@@ -123,7 +123,7 @@ export default function AssetsPage() {
 
   return (
     <>
-    
+
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 px-4 py-8 md:px-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Asset Manager</h1>
@@ -179,7 +179,7 @@ export default function AssetsPage() {
                 <CardContent className="p-0">
                   <div className="relative aspect-square bg-muted">
                     {isImage(asset.metadata?.mimetype) ? (
-                      <img src={`/api/assets/${asset.name}`} alt={asset.name} className="h-full w-full object-cover" />
+                      <img src={`/api/null-mdx/assets/${asset.name}`} alt={asset.name} className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center">
                         <FileText className="h-12 w-12 text-muted-foreground" />

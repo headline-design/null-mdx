@@ -21,6 +21,12 @@ export function Footer() {
           >
             Assets
           </a>
+          <a
+            href="/docs/api/overview"
+            className="text-[13px] text-foreground/40 transition-colors duration-100 hover:text-foreground"
+          >
+            API
+          </a>
           {siteConfig.social.twitter && (
             <Link
               href={siteConfig.social.twitter}

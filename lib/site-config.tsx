@@ -48,6 +48,7 @@ export const siteConfig = {
   nav: [
     { label: "Docs", href: "/docs" },
     { label: "Blog", href: "/blog" },
+    { label: "API", href: "/docs/api/overview" },
     { label: "About", href: "/about" },
     { label: "Design", href: "/design" },
   ],

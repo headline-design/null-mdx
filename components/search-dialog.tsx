@@ -22,7 +22,7 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=closed]:animate-fd-fade-out data-[state=open]:animate-fd-fade-in"/>
+    <DialogOverlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=closed]:animate-fd-fade-out data-[state=open]:animate-fd-fade-in" />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
@@ -32,7 +32,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      
+
     </DialogPrimitive.Content>
   </DialogPortal>
 ))
@@ -57,7 +57,7 @@ export function SearchDialog({
       setLoading(true)
       setQuery("")
       setSelectedIndex(0)
-      fetch("/api/search")
+      fetch("/api/null-mdx/search")
         .then((res) => res.json())
         .then((data) => {
           setResults(data)
@@ -163,9 +163,8 @@ export function SearchDialog({
                         <button
                           key={result.path}
                           onClick={() => handleSelect(result)}
-                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${
-                            isSelected ? "bg-accent" : "hover:bg-accent"
-                          }`}
+                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${isSelected ? "bg-accent" : "hover:bg-accent"
+                            }`}
                         >
                           {getIcon(result.type, result.slug)}
                           <div className="flex flex-col gap-0.5">
@@ -193,9 +192,8 @@ export function SearchDialog({
                         <button
                           key={result.path}
                           onClick={() => handleSelect(result)}
-                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${
-                            isSelected ? "bg-accent" : "hover:bg-accent"
-                          }`}
+                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${isSelected ? "bg-accent" : "hover:bg-accent"
+                            }`}
                         >
                           {getIcon(result.type, result.slug)}
                           <div className="flex flex-col gap-0.5">
@@ -223,9 +221,8 @@ export function SearchDialog({
                         <button
                           key={result.path}
                           onClick={() => handleSelect(result)}
-                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${
-                            isSelected ? "bg-accent" : "hover:bg-accent"
-                          }`}
+                          className={`flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-[13px] transition-colors duration-100 ${isSelected ? "bg-accent" : "hover:bg-accent"
+                            }`}
                         >
                           {getIcon(result.type, result.slug)}
                           <div className="flex flex-col gap-0.5">

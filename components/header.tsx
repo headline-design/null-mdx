@@ -58,7 +58,7 @@ export function Header() {
                   <li className="relative">
                     <a
                       href="/docs"
-                      data-active={pathname === "/docs" || pathname.startsWith("/docs")}
+                      data-active={(pathname === "/docs" || pathname.startsWith("/docs/")) && !pathname.startsWith("/docs/api")}
                       className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
                     >
                       Docs
@@ -67,7 +67,7 @@ export function Header() {
                   <li className="relative">
                     <a
                       href="/docs/api"
-                      data-active={pathname === "/docs/api"}
+                      data-active={pathname === "/docs/api" || pathname.startsWith("/docs/api/")}
                       className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
                     >
                       API
@@ -99,7 +99,9 @@ export function Header() {
                       onClick={() => setOpen(false)}
                       className={cn(
                         "rounded-md px-3 py-2 text-sm transition-colors",
-                        pathname === item.href || pathname.startsWith(item.href + "/")
+                        pathname === item.href ||
+                          (pathname.startsWith(item.href + "/") &&
+                            !(item.href === "/docs" && pathname.startsWith("/docs/api")))
                           ? "font-medium text-foreground bg-accent"
                           : "text-muted-foreground hover:text-foreground",
                       )}
