@@ -12,42 +12,42 @@ All site configuration is managed through the `lib/site-config.ts` file.
 
 Switch between blog and docs mode:
 
-\`\`\`typescript
+```typescript
 export const siteConfig = {
   mode: "blog", // or "docs"
   // ...
 }
-\`\`\`
+```
 
 ### Basic Settings
 
-\`\`\`typescript
+```typescript
 export const siteConfig = {
   name: "My Site",
   description: "A modern content site",
   url: "https://example.com",
   // ...
 }
-\`\`\`
+```
 
 ### Author Information
 
 For blog mode, configure your author details:
 
-\`\`\`typescript
+```typescript
 author: {
   name: "Your Name",
   email: "hello@example.com",
   twitter: "@username",
   github: "username",
 }
-\`\`\`
+```
 
 ### Navigation
 
 Customize navigation links for each mode:
 
-\`\`\`typescript
+```typescript
 nav: {
   blog: [
     { label: "Writing", href: "/blog" },
@@ -59,15 +59,15 @@ nav: {
     { label: "GitHub", href: "https://github.com", external: true },
   ],
 }
-\`\`\`
+```
 
 ## Supabase Storage
 
 Configure your Supabase bucket name in `lib/supabase/storage.ts`:
 
-\`\`\`typescript
+```typescript
 const BUCKET_NAME = "docs-blog-media"
-\`\`\`
+```
 
 <Callout type="info">
   Run the SQL script at `scripts/001-setup-storage.sql` to create the public bucket for storing images and assets.

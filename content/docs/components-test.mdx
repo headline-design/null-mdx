@@ -11,7 +11,7 @@ This page tests the enhanced MDX components.
 
 ### With Title
 
-\`\`\`tsx title="components/ui/button.tsx"
+```tsx title="components/ui/button.tsx"
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 
@@ -33,13 +33,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 )
 Button.displayName = "Button"
-\`\`\`
+```
 
 ### Without Title
 
-\`\`\`bash
+```bash
 npm install next
-\`\`\`
+```
 
 ## Tabs
 
@@ -50,19 +50,19 @@ npm install next
     <TabsTrigger value="yarn">yarn</TabsTrigger>
   </TabsList>
   <TabsContent value="npm">
-    \`\`\`bash
+    ```bash
     npm install @radix-ui/react-tabs
-    \`\`\`
+    ```
   </TabsContent>
   <TabsContent value="pnpm">
-    \`\`\`bash
+    ```bash
     pnpm add @radix-ui/react-tabs
-    \`\`\`
+    ```
   </TabsContent>
   <TabsContent value="yarn">
-    \`\`\`bash
+    ```bash
     yarn add @radix-ui/react-tabs
-    \`\`\`
+    ```
   </TabsContent>
 </Tabs>
 
@@ -92,9 +92,9 @@ npm install next
 
 ### Run the following command
 
-\`\`\`bash
+```bash
 npx create-next-app@latest
-\`\`\`
+```
 
 </Step>
 
