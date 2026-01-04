@@ -34,6 +34,13 @@ export async function generateMetadata({ params }: DocsPageProps): Promise<Metad
 export default async function DocsSlugPage({ params }: DocsPageProps) {
   const { slug } = await params
   const slugPath = slug.join("/")
+
+  // Handle fumadocs-specific segment requests gracefully
+  // The proxy site (Fumadocs) sends these to discover navigation, but this app uses custom sidebar logic.
+  if (slugPath.includes(".segments") || slugPath.endsWith("_tree.segment.rsc")) {
+    return null
+  }
+
   const doc = getContentBySlug("docs", slugPath)
   const navigation = getDocsNavigation()
 

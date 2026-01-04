@@ -45,6 +45,12 @@ export const siteConfig = {
   // When false, the root page redirects to /docs or /blog based on mode
   isDemo: true,
 
+  topNav: [
+    { label: "Docs", href: "/docs", activated: true },
+    { label: "Blog", href: "/blog", activated: true },
+    { label: "API", href: "/docs/api", activated: true },
+  ],
+
   nav: [
     { label: "Docs", href: "/docs" },
     { label: "Blog", href: "/blog" },

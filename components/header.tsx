@@ -46,33 +46,19 @@ export function Header() {
             <nav aria-label="Main" className="group/navigation-menu absolute pointer-events-none [&>*]:pointer-events-auto inset-x-0 flex justify-center">
               <div style={{ position: 'relative' }}>
                 <ul className="group flex flex-1 list-none items-center justify-center gap-1">
-                  <li className="relative">
-                    <a
-                      href="/blog"
-                      data-active={pathname === "/blog" || pathname.startsWith("/blog")}
-                      className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
-                    >
-                      Blog
-                    </a>
-                  </li>
-                  <li className="relative">
-                    <a
-                      href="/docs"
-                      data-active={(pathname === "/docs" || pathname.startsWith("/docs/")) && !pathname.startsWith("/docs/api")}
-                      className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
-                    >
-                      Docs
-                    </a>
-                  </li>
-                  <li className="relative">
-                    <a
-                      href="/docs/api"
-                      data-active={pathname === "/docs/api" || pathname.startsWith("/docs/api/")}
-                      className="text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1"
-                    >
-                      API
-                    </a>
-                  </li>
+                  {siteConfig.topNav.map((item) => (
+                    <li key={item.href} className="relative">
+                      <a
+                        href={item.href}
+                        data-active={pathname === item.href}
+                        className={cn("text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1",
+                          item.activated ? "flex" : "hidden"
+                        )}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </nav>
