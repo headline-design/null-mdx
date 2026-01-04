@@ -167,6 +167,9 @@ dependencies:
   shiki:
     specifier: ^3.20.0
     version: 3.20.0
+  simple-icons:
+    specifier: ^16.4.0
+    version: 16.4.0
   sonner:
     specifier: ^1.7.4
     version: 1.7.4(react-dom@19.2.0)(react@19.2.0)
@@ -4210,6 +4213,11 @@ packages:
       '@shikijs/types': 3.20.0
       '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
+    dev: false
+
+  /simple-icons@16.4.0:
+    resolution: {integrity: sha512-8CKtCvx1Zq3L0CBsR4RR1MjGCXkXbzdspwl2yCxs8oWkstbzj2+DatRKDee/tuj3Ffd/2CDzwEky9RgG2yggew==}
+    engines: {node: '>=0.12.18'}
     dev: false
 
   /sonner@1.7.4(react-dom@19.2.0)(react@19.2.0):
