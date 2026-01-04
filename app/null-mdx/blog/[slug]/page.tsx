@@ -1,4 +1,3 @@
-
 import { notFound } from "next/navigation"
 import { MDXContent } from "@/components/mdx-content"
 import { getAllContent, getContentBySlug } from "@/lib/content"

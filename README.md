@@ -10,7 +10,7 @@ Null MDX is a production-ready Next.js 16 template designed for content-heavy si
 
 ### Why "Null"?
 
-The name reflects our philosophy: **start from zero, with zero assumptions**. No opinionated styling you'll fight against. No bloated features you'll rip out. Just a clean, minimal foundation that scales with your needs.
+The name reflects our philosophy: **start from nothing, with zero assumptions**. No opinionated styling you'll fight against. No bloated features you'll rip out. Just a clean, minimal foundation that scales with your needs.
 
 ## What Makes Null MDX Unique
 
@@ -43,9 +43,10 @@ export const siteConfig = {
 
 Null MDX is designed to work as part of a larger Next.js multi-zone architecture:
 
+- **Subroute architecture**: All content lives under `/null-mdx/*` for easy proxy integration
 - Root links use `<a>` tags for proper zone navigation
 - No client-side routing interference with rewrites
-- Perfect for embedding docs/blog into an existing site
+- Perfect for embedding docs/blog into an existing site via rewrites
 
 ### Built-in Features
 
@@ -55,33 +56,89 @@ Null MDX is designed to work as part of a larger Next.js multi-zone architecture
 | **AI Assistant** | Integrated "Ask AI" button for documentation queries |
 | **Table of Contents** | Auto-generated from headings with scroll tracking |
 | **Reading Progress** | Visual progress indicator for long-form content |
-| **RSS Feed** | Auto-generated at `/feed.xml` |
-| **LLMs.txt** | AI-friendly content index at `/llms.txt` |
+| **RSS Feed** | Auto-generated at `/null-mdx/blog/feed.xml` |
+| **LLMs.txt** | AI-friendly content index at `/null-mdx/docs/llms.txt` |
 | **Asset Management** | Supabase-powered media uploads |
-| **Design System** | Built-in design system viewer at `/design` |
+| **Design System** | Built-in design system viewer at `/null-mdx/design` |
 
 ## Project Structure
 
 ```
 null-mdx/
 ├── app/
-│   ├── (design-system)/    # Design system routes
-│   ├── api/                # API routes (search, assets)
-│   ├── blog/               # Blog pages
-│   ├── docs/               # Documentation pages
-│   └── assets/             # Asset management
+│   ├── layout.tsx              # Root layout
+│   ├── page.tsx                # Root redirect
+│   ├── not-found.tsx           # 404 page
+│   ├── feed.xml/               # Global RSS feed
+│   ├── llms.txt/               # Global LLMs.txt
+│   └── null-mdx/               # <-- All template routes live here
+│       ├── page.tsx            # Landing/demo page
+│       ├── (design-system)/    # Design system routes
+│       │   └── design/         # /null-mdx/design
+│       ├── about/              # /null-mdx/about
+│       ├── api/                # API routes
+│       │   ├── search/         # Search endpoint
+│       │   └── assets/         # Asset upload/management
+│       ├── assets/             # /null-mdx/assets (asset manager UI)
+│       ├── blog/               # Blog section
+│       │   ├── page.tsx        # /null-mdx/blog (index)
+│       │   ├── [slug]/         # /null-mdx/blog/:slug
+│       │   └── feed.xml/       # /null-mdx/blog/feed.xml
+│       └── docs/               # Documentation section
+│           ├── page.tsx        # /null-mdx/docs (index)
+│           ├── [...slug]/      # /null-mdx/docs/:path
+│           └── llms.txt/       # /null-mdx/docs/llms.txt
 ├── components/
-│   ├── ui/                 # shadcn/ui components
-│   └── ...                 # MDX & layout components
+│   ├── ui/                     # shadcn/ui components
+│   └── ...                     # MDX & layout components
 ├── content/
-│   ├── blog/               # Blog posts (.mdx)
-│   └── docs/               # Documentation (.mdx)
-│       └── guides/         # Nested doc sections
+│   ├── blog/                   # Blog posts (.mdx)
+│   └── docs/                   # Documentation (.mdx)
+│       └── guides/             # Nested doc sections
 ├── lib/
-│   ├── content.ts          # Content loading utilities
-│   ├── site-config.tsx     # Site configuration
-│   └── supabase/           # Supabase clients
-└── public/                 # Static assets
+│   ├── content.ts              # Content loading utilities
+│   ├── site-config.tsx         # Site configuration
+│   └── supabase/               # Supabase clients
+└── public/                     # Static assets
+```
+
+## Route Structure
+
+All template routes are nested under `/null-mdx/` to enable easy integration with parent applications via rewrites:
+
+| Route | Description |
+|-------|-------------|
+| `/null-mdx` | Landing page (demo mode) or redirect |
+| `/null-mdx/docs` | Documentation index |
+| `/null-mdx/docs/:slug` | Documentation pages |
+| `/null-mdx/docs/llms.txt` | AI-friendly docs index |
+| `/null-mdx/blog` | Blog index |
+| `/null-mdx/blog/:slug` | Blog posts |
+| `/null-mdx/blog/feed.xml` | Blog RSS feed |
+| `/null-mdx/about` | About page |
+| `/null-mdx/design` | Design system viewer |
+| `/null-mdx/assets` | Asset management UI |
+
+### Multi-Zone Integration
+
+To integrate Null MDX into a parent application, add rewrites in your parent app's `next.config.mjs`:
+
+```js
+// Parent app next.config.mjs
+export default {
+  async rewrites() {
+    return [
+      {
+        source: '/docs/:path*',
+        destination: 'https://your-null-mdx-deployment.vercel.app/null-mdx/docs/:path*',
+      },
+      {
+        source: '/blog/:path*', 
+        destination: 'https://your-null-mdx-deployment.vercel.app/null-mdx/blog/:path*',
+      },
+    ]
+  },
+}
 ```
 
 ## Quick Start
@@ -124,11 +181,11 @@ For nested documentation sections, create folders:
 
 ```
 content/docs/
-├── getting-started.mdx     # /docs/getting-started
-├── installation.mdx        # /docs/installation
+├── getting-started.mdx     # /null-mdx/docs/getting-started
+├── installation.mdx        # /null-mdx/docs/installation
 └── guides/
-    ├── configuration.mdx   # /docs/guides/configuration
-    └── writing-content.mdx # /docs/guides/writing-content
+    ├── configuration.mdx   # /null-mdx/docs/guides/configuration
+    └── writing-content.mdx # /null-mdx/docs/guides/writing-content
 ```
 
 ## Configuration Options

@@ -17,7 +17,7 @@ Content is written in MDX format, which combines Markdown with React components.
 
 Each MDX file starts with frontmatter:
 
-```yaml
+\`\`\`yaml
 ---
 title: "My Post Title"
 description: "A brief description"
@@ -27,15 +27,15 @@ tags: ["tag1", "tag2"]
 draft: false
 order: 1  # for docs only
 ---
-```
+\`\`\`
 
 ### Using Images
 
 Reference images from Supabase Storage:
 
-```markdown
+\`\`\`markdown
 ![Alt text](path/to/image.jpg)
-```
+\`\`\`
 
 The image path is relative to your Supabase bucket.
 
@@ -43,11 +43,11 @@ The image path is relative to your Supabase bucket.
 
 Use the Callout component for important information:
 
-```mdx
+\`\`\`mdx
 <Callout type="info">
   This is helpful information.
 </Callout>
-```
+\`\`\`
 
 Available types: `info`, `warning`, `error`, `success`
 
@@ -59,7 +59,7 @@ Available types: `info`, `warning`, `error`, `success`
 
 Use fenced code blocks with language hints:
 
-````markdown
-```typescript
+\`\`\``markdown
+\`\`\`typescript
 const greeting = "Hello, World!"
-```
+\`\`\`

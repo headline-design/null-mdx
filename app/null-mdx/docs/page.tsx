@@ -1,4 +1,3 @@
-
 import { DocsSidebar } from "@/components/docs-sidebar"
 import { getDocsNavigation } from "@/lib/content"
 import Link from "next/link"

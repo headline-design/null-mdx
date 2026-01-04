@@ -1,4 +1,3 @@
-
 import { getAllContent } from "@/lib/content"
 import { BlogCard } from "@/components/blog-card"
 import type { Metadata } from "next"
