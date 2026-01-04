@@ -22,7 +22,7 @@ export default function DocsPage() {
 
         <main className="relative flex min-h-[calc(100vh-3.5rem)] flex-1 flex-col">
           <div className="flex w-full flex-row gap-x-6">
-            <div className="w-full max-w-3xl px-0 md:pr-4 xl:mx-auto xl:px-0 pt-8 md:pt-12">
+            <div className="flex w-full flex-1 flex-col gap-6 px-4 md:px-6 pt-8 md:pt-12 xl:px-12 xl:mx-auto max-w-[1120px]">
               <header className="mb-10">
                 <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">Documentation</h1>
                 <p className="mt-4 text-xl text-muted-foreground">
