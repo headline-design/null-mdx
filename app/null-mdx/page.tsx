@@ -3,6 +3,7 @@ import { siteConfig, isBlogMode, isDemoMode } from "@/lib/site-config"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { redirect } from "next/navigation"
+import { Footer } from "@/components/footer"
 
 function SupabaseIcon({ className }: { className?: string }) {
   return (
@@ -171,6 +172,7 @@ export default function HomePage() {
           </section>
         )}
       </main>
+      <Footer />
     </>
   )
 }
