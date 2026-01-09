@@ -95,7 +95,7 @@ function Steps({ children }: { children: React.ReactNode }) {
 
 function Step({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative [counter-increment:step] before:absolute before:-left-[41px] before:top-0.5 before:flex before:h-6 before:w-6 before:items-center before:justify-center before:rounded-full before:bg-background before:border before:border-border before:text-[10px] before:font-bold before:text-foreground/50 before:shadow-sm before:content-[counter(step)] transition-all hover:before:border-primary/50 hover:before:text-primary not-prose">
+    <div className="relative [counter-increment:step] before:absolute before:-left-[44px] before:top-0 before:flex before:h-6 before:w-6 before:items-center before:justify-center before:rounded-full before:bg-background before:border before:border-border before:text-[10px] before:font-bold before:text-foreground/50 before:shadow-sm before:content-[counter(step)] transition-all hover:before:border-primary/50 hover:before:text-primary not-prose">
       {children}
     </div>
   )
