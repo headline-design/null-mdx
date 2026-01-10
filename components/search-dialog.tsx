@@ -130,8 +130,6 @@ export function SearchDialog({
             <CommandItem
               value={`ask-ai-${query}`}
               onSelect={() => {
-                // Trigger AI
-                console.log("Ask AI about:", query)
                 runCommand(() => {
                   window.dispatchEvent(new CustomEvent('open-ask-ai', { detail: { query } }))
                 })
@@ -202,7 +200,7 @@ export function SearchDialog({
 
         {/* Blog */}
         {blogResults.length > 0 && (
-          <CommandGroup heading="Engineering Log">
+          <CommandGroup heading="Blog">
             {blogResults.map((result) => (
               <CommandItem
                 key={result.path}

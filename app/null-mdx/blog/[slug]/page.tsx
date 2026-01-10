@@ -67,9 +67,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <main className="mx-auto w-full max-w-[1200px] px-6 py-20 md:py-32">
         <div className="max-w-3xl mx-auto">
           <nav className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-widest text-muted-foreground/40 mb-12">
-            <Link href="/blog" className="hover:text-primary transition-colors">Knowledge Base</Link>
+            <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="truncate">{post.meta.tags?.[0] || "Security Bulletin"}</span>
+            <span className="truncate">{post.meta.tags?.[0] || "Article"}</span>
           </nav>
 
           <header className="mb-16">
@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="h-6 w-6 rounded-lg bg-foreground flex items-center justify-center text-[10px] font-bold text-background rotate-45">
                 <span className="-rotate-45 font-bold">▲</span>
               </div>
-              <span className="text-[13px] font-bold uppercase tracking-wider text-foreground">{post.meta.author || "Security Team"}</span>
+              <span className="text-[13px] font-bold uppercase tracking-wider text-foreground">{post.meta.author || siteConfig.author.name}</span>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-4 border-b border-border/10 text-[13px] font-bold uppercase tracking-widest text-muted-foreground/40">

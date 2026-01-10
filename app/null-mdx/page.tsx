@@ -5,6 +5,8 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 import { redirect } from "next/navigation"
 import { Footer } from "@/components/footer"
 import { GridBackground } from "@/components/ui/grid-background"
+import { siNextdotjs, siReact, siTailwindcss, siSupabase } from "simple-icons/icons"
+import { Sparkles, Cpu } from "lucide-react"
 
 function SupabaseIcon({ className }: { className?: string }) {
   return (
@@ -13,6 +15,21 @@ function SupabaseIcon({ className }: { className?: string }) {
         fill="currentColor"
         d="M3.084 15.25c-1.664 0-2.6-1.912-1.58-3.226L10.21.806C10.794.054 12 .466 12 1.42v7.33h8.916c1.663 0 2.6 1.912 1.58 3.226L13.79 23.194c-.584.752-1.79.34-1.79-.613V15.25z"
       />
+    </svg>
+  )
+}
+
+function SimpleIcon({ icon, className }: { icon: any; className?: string }) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      className={className}
+    >
+      <title>{icon.title}</title>
+      <path d={icon.path} />
     </svg>
   )
 }
@@ -157,15 +174,33 @@ export default function HomePage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-border/40 border border-border/40 overflow-hidden rounded-xl">
                   {[
-                    { name: "Next.js", icon: "▲" },
-                    { name: "React", icon: "⚛" },
-                    { name: "Tailwind", icon: "≋" },
-                    { name: "Supabase", icon: "⚡" },
-                    { name: "Lucide", icon: "✧" },
-                    { name: "Geist", icon: "G" }
+                    {
+                      name: "Next.js",
+                      icon: <SimpleIcon icon={siNextdotjs} className="h-6 w-6" />
+                    },
+                    {
+                      name: "React",
+                      icon: <SimpleIcon icon={siReact} className="h-6 w-6" />
+                    },
+                    {
+                      name: "Tailwind",
+                      icon: <SimpleIcon icon={siTailwindcss} className="h-6 w-6" />
+                    },
+                    {
+                      name: "Supabase",
+                      icon: <SimpleIcon icon={siSupabase} className="h-6 w-6" />
+                    },
+                    {
+                      name: "Lucide",
+                      icon: <Sparkles className="h-6 w-6" />
+                    },
+                    {
+                      name: "Geist",
+                      icon: <Cpu className="h-6 w-6" />
+                    }
                   ].map((tech) => (
                     <div key={tech.name} className="flex flex-col items-center justify-center p-8 bg-background hover:bg-muted/30 transition-colors group">
-                      <div className="text-2xl mb-3 opacity-40 group-hover:opacity-100 transition-opacity font-mono">
+                      <div className="text-muted-foreground group-hover:text-foreground transition-colors mb-3 opacity-60 group-hover:opacity-100">
                         {tech.icon}
                       </div>
                       <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/40 group-hover:text-foreground transition-colors">
@@ -225,7 +260,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

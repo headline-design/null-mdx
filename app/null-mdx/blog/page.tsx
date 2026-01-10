@@ -62,24 +62,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </Link>
             ))}
           </nav>
-
-          <div className="flex items-center gap-2">
-            <div className="relative group">
-              <input
-                type="text"
-                placeholder="Search posts"
-                className="h-9 w-full md:w-64 bg-muted/30 border border-border/40 rounded-lg px-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary/40 transition-all"
-              />
-              <svg className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <button className="p-2 text-muted-foreground/60 hover:text-foreground transition-colors">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 

@@ -38,7 +38,6 @@ export function AskAI() {
 
     // Handle initial mount
     React.useEffect(() => {
-        console.log("AskAI: Component mounted")
         setMounted(true)
     }, [])
 
@@ -249,9 +248,6 @@ export function AskAI() {
                             </Button>
                         </div>
                     </form>
-                    <p className="mt-2 text-[10px] text-center text-muted-foreground/40 font-bold uppercase tracking-widest">
-                        Powered by Sora Intelligence
-                    </p>
                 </div>
             </DialogContent>
         </Dialog>

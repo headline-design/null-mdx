@@ -33,7 +33,6 @@ export function Header() {
         isScrolled ? "border-border" : "border-transparent"
       )}
     >
-      <div className="hidden">HEADER_UPDATED</div>
       <div className="flex w-full mx-auto xl:px-0">
         <div className="flex items-center gap-x-2 pr-2.5">
           <a data-testid="header-logo" className="px-1 py-1" href="/">

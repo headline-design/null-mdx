@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { siteConfig } from "@/lib/site-config"
 import { SkipNav } from "@/components/skip-nav"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { Toaster } from "sonner"
 
 import "./globals.css"
@@ -53,6 +54,7 @@ export default function RootLayout({
           <Header />
 
           {children}
+          <Footer />
           <Toaster position="bottom-right" richColors />
         </ThemeProvider>
       </body>
