@@ -108,6 +108,39 @@ Follow the prompts to configure your project.
 
 </Steps>
 
+## Mermaid Diagrams
+
+<Mermaid chart={`graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;`} />
+
+## Code Tabs (Advanced)
+
+<CodeTabs defaultValue="npm">
+  <CodeTabsList>
+    <CodeTabsTrigger value="npm">npm</CodeTabsTrigger>
+    <CodeTabsTrigger value="pnpm">pnpm</CodeTabsTrigger>
+    <CodeTabsTrigger value="yarn">yarn</CodeTabsTrigger>
+  </CodeTabsList>
+  <CodeTabsContent value="npm">
+    ```bash
+    npm install mermaid
+    ```
+  </CodeTabsContent>
+  <CodeTabsContent value="pnpm">
+    ```bash
+    pnpm add mermaid
+    ```
+  </CodeTabsContent>
+  <CodeTabsContent value="yarn">
+    ```bash
+    yarn add mermaid
+    ```
+  </CodeTabsContent>
+</CodeTabs>
+
 ## Table
 
 | Prop | Type | Description |
@@ -115,3 +148,4 @@ Follow the prompts to configure your project.
 | `children` | `React.ReactNode` | The content to render |
 | `className` | `string` | Additional CSS classes |
 | `variant` | `default | destructive` | The button variant |
+

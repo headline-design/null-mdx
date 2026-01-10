@@ -33,6 +33,7 @@ export function Header() {
         isScrolled ? "border-border" : "border-transparent"
       )}
     >
+      <div className="hidden">HEADER_UPDATED</div>
       <div className="flex w-full mx-auto xl:px-0">
         <div className="flex items-center gap-x-2 pr-2.5">
           <a data-testid="header-logo" className="px-1 py-1" href="/">
@@ -51,11 +52,18 @@ export function Header() {
                       <a
                         href={item.href}
                         data-active={pathname === item.href}
-                        className={cn("text-foreground/80 font-medium data-[active=true]:bg-muted data-[active=true]:text-foreground hover:bg-muted focus:bg-muted hover:text-foreground focus:text-foreground focus-visible:ring-ring/50 flex-col gap-1 rounded-md px-2 py-1 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1",
+                        className={cn(
+                          "relative text-sm font-medium transition-colors gap-1",
+                          pathname === item.href || (pathname.startsWith(item.href + "/") && item.href !== "/")
+                            ? "text-foreground"
+                            : "text-muted-foreground hover:text-foreground",
                           item.activated ? "flex" : "hidden"
                         )}
                       >
                         {item.label}
+                        {pathname === item.href && (
+                          <div className="absolute -bottom-[17px] left-0 right-0 h-[2px] bg-foreground rounded-full" />
+                        )}
                       </a>
                     </li>
                   ))}
@@ -67,35 +75,87 @@ export function Header() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <button
-                className="focus:border-input focus-visible:border-input disabled:border-input border-input hover:border-input focus-visible:ring-offset-background outline-none has-[focus-visible]:ring-2 inline-flex shrink-0 cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium transition focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:ring-0 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 bg-secondary text-foreground hover:bg-muted focus:bg-muted focus-visible:bg-muted px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg md:hidden size-7"
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden h-9 w-9 text-muted-foreground hover:text-foreground"
                 aria-label="Open menu"
-                type="button"
               >
-                <svg height="16" strokeLinejoin="round" style={{ color: "currentColor" }} viewBox="0 0 16 16" width="16"><path fillRule="evenodd" clipRule="evenodd" d="M1.75 4H1V5.5H1.75H14.25H15V4H14.25H1.75ZM1.75 10.5H1V12H1.75H14.25H15V10.5H14.25H1.75Z" fill="currentColor"></path></svg>
-              </button>
+                <Menu className="h-5 w-5" />
+              </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] bg-background p-0">
-              <div className="flex flex-col gap-4 p-4 pt-12">
-                <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
-                  {siteConfig.nav.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "rounded-md px-3 py-2 text-sm transition-colors",
-                        pathname === item.href ||
-                          (pathname.startsWith(item.href + "/") &&
-                            !(item.href === "/docs" && pathname.startsWith("/docs/api")))
-                          ? "font-medium text-foreground bg-accent"
-                          : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
+            <SheetContent side="right" className="w-full sm:w-[350px] bg-background/95 backdrop-blur-xl border-l border-border/40 p-0">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center gap-2 px-6 h-[51px] border-b border-border/20">
+                  <div className="scale-75 origin-left">
+                    {siteConfig.logo}
+                  </div>
+                </div>
+
+                <nav className="flex-1 overflow-y-auto py-8 px-6 space-y-8" aria-label="Mobile navigation">
+                  <div>
+                    <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/40 mb-6">Main Menu</h2>
+                    <div className="flex flex-col gap-2">
+                      {siteConfig.nav.map((item) => {
+                        const isActive = pathname === item.href || (pathname.startsWith(item.href + "/") && item.href !== "/")
+                        return (
+                          <a
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={cn(
+                              "flex items-center justify-between group rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200",
+                              isActive
+                                ? "bg-primary/[0.03] text-primary ring-1 ring-primary/20 shadow-sm"
+                                : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                            )}
+                          >
+                            {item.label}
+                            {isActive && <div className="h-1.5 w-1.5 rounded-full bg-primary animate-in fade-in zoom-in" />}
+                          </a>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {siteConfig.topNav && siteConfig.topNav.length > 0 && (
+                    <div>
+                      <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/40 mb-6">Explore</h2>
+                      <div className="flex flex-col gap-2">
+                        {siteConfig.topNav.filter(i => i.activated).map((item) => {
+                          const isActive = pathname === item.href
+                          return (
+                            <a
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setOpen(false)}
+                              className={cn(
+                                "flex items-center justify-between group rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200",
+                                isActive
+                                  ? "bg-primary/[0.03] text-primary ring-1 ring-primary/20 shadow-sm"
+                                  : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                              )}
+                            >
+                              {item.label}
+                              {isActive && <div className="h-1.5 w-1.5 rounded-full bg-primary animate-in fade-in zoom-in" />}
+                            </a>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </nav>
+
+                <div className="p-6 border-t border-border/10 bg-muted/[0.02]">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-[12px] font-medium text-muted-foreground/50">
+                      © {new Date().getFullYear()} Null MDX
+                    </p>
+                    <div className="flex gap-2">
+                      <ThemeToggle />
+                    </div>
+                  </div>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

@@ -1,101 +1,195 @@
+"use client"
+
+import * as React from "react"
+import { Installer } from "@/components/installer"
+import { TypeTable } from "@/components/type-table"
+import { CodeTabs, CodeTabsList, CodeTabsTrigger, CodeTabsContent } from "@/components/code-tabs"
+import { Mermaid } from "@/components/mermaid"
+import { AskAI } from "@/components/ask-ai"
+import { Video } from "@/components/video"
+import { ChevronRight, FileText, BookOpen, ArrowRight, Layout, Palette, Type, Box, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { FileText, BookOpen, ArrowRight, Layout, Palette, Type, Box } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { isAIEnabled } from "@/lib/site-config"
 
 const templates = [
   {
     title: "Documentation Entry",
     description: "A polished landing page for documentation with search, quick links, and categorized navigation.",
-    href: "/design/docs-entry",
+    href: "/docs", // Updated to actual docs route
     icon: BookOpen,
     color: "bg-blue-500/10 text-blue-500",
   },
   {
     title: "Blog Entry",
     description: "A full-featured blog landing with featured posts, category filters, and newsletter signup.",
-    href: "/design/blog-entry",
+    href: "/blog", // Updated to actual blog route
     icon: FileText,
     color: "bg-purple-500/10 text-purple-500",
   },
 ]
 
-const components = [
-  { name: "Buttons", icon: Box },
-  { name: "Typography", icon: Type },
-  { name: "Colors", icon: Palette },
-  { name: "Layouts", icon: Layout },
-]
-
 export default function DesignPage() {
   return (
-    <>
-      <main className="flex-1 py-16 md:py-24">
-        <div className="container max-w-6xl mx-auto px-4">
-          <header className="mb-16">
-            <div className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
-              Design System
-            </div>
-            <h1 className="text-4xl font-extrabold tracking-tight lg:text-6xl mb-4">
-              UI Templates & Components
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-              Pre-built, production-ready templates and components for building high-quality documentation and blogs.
-            </p>
-          </header>
+    <main className="mx-auto w-full max-w-[1200px] px-6 py-20 md:py-32">
+      <div className="max-w-3xl mx-auto">
+        <nav className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-widest text-muted-foreground/40 mb-12">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-foreground">Design System</span>
+        </nav>
 
-          <section className="mb-20">
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-              <Layout className="w-5 h-5 text-primary" />
+        <header className="mb-20">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
+              Null MDX Design System
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
+            Visual Language
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground/80 leading-relaxed font-medium tracking-tight">
+            A collection of premium components and patterns used to build the null-mdx experience.
+          </p>
+        </header>
+
+        <section className="space-y-32">
+          {/* Page Templates Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8 flex items-center gap-2">
+              <Layout className="w-4 h-4" />
               Page Templates
             </h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {templates.map((template) => (
                 <Link
                   key={template.href}
                   href={template.href}
-                  className="group relative block p-8 rounded-2xl border border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 active:scale-[0.99]"
+                  className="group relative block p-8 rounded-2xl border border-border/40 bg-card/50 hover:bg-card hover:border-primary/40 transition-all duration-300 active:scale-[0.99]"
                 >
                   <div className="flex flex-col gap-6">
-                    <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3", template.color)}>
-                      <template.icon className="w-7 h-7" />
+                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110", template.color)}>
+                      <template.icon className="w-6 h-6" />
                     </div>
-                    <div className="space-y-3">
-                      <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
                         {template.title}
-                        <ArrowRight className="w-5 h-5 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                       </h3>
-                      <p className="text-base text-muted-foreground leading-relaxed italic line-clamp-2">
-                        "{template.description}"
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {template.description}
                       </p>
                     </div>
                   </div>
-                  {/* Subtle gradient overlay */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </Link>
               ))}
             </div>
-          </section>
+          </div>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-              <Box className="w-5 h-5 text-primary" />
-              UI Kit Concepts
+          {/* Installer Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8">Installer</h2>
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              A minimalist command-line snippet utility with copy-to-clipboard functionality and toast notifications.
+            </p>
+            <Installer command="pnpm add @null-mdx/core" />
+          </div>
+
+          {/* TypeTable Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8 flex items-center gap-2">
+              <Type className="w-4 h-4" />
+              TypeTable
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {components.map((comp) => (
-                <div key={comp.name} className="p-6 rounded-xl border border-border bg-muted/20 hover:bg-muted/40 transition-colors cursor-not-allowed grayscale opacity-60">
-                  <comp.icon className="w-5 h-5 mb-3 text-muted-foreground" />
-                  <span className="text-sm font-medium text-muted-foreground">{comp.name}</span>
-                  <div className="mt-1 text-[10px] uppercase tracking-tighter text-muted-foreground/50">Coming Soon</div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-      </main>
-    </>
-  )
-}
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              Structured documentation for props and interfaces with high-contrast typography and responsive layout.
+            </p>
+            <TypeTable
+              type={{
+                command: {
+                  type: "string",
+                  description: "The command to be displayed and copied.",
+                  default: '""',
+                },
+                title: {
+                  type: "string",
+                  description: "Optional title for the component header.",
+                },
+              }}
+            />
+          </div>
 
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(" ")
+          {/* CodeTabs Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8">CodeTabs</h2>
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              Sleek, border-bottom tabs for displaying multiple code variants, languages, or snippets in a compact view.
+            </p>
+            <CodeTabs defaultValue="next">
+              <CodeTabsList>
+                <CodeTabsTrigger value="next">Next.js</CodeTabsTrigger>
+                <CodeTabsTrigger value="vite">Vite</CodeTabsTrigger>
+                <CodeTabsTrigger value="remix">Remix</CodeTabsTrigger>
+              </CodeTabsList>
+              <CodeTabsContent value="next">
+                <pre className="p-4 bg-muted/20 text-[13px] font-mono rounded-lg">npx create-next-app@latest</pre>
+              </CodeTabsContent>
+              <CodeTabsContent value="vite">
+                <pre className="p-4 bg-muted/20 text-[13px] font-mono rounded-lg">npm create vite@latest</pre>
+              </CodeTabsContent>
+              <CodeTabsContent value="remix">
+                <pre className="p-4 bg-muted/20 text-[13px] font-mono rounded-lg">npx create-remix@latest</pre>
+              </CodeTabsContent>
+            </CodeTabs>
+          </div>
+
+          {/* Mermaid Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8 flex items-center gap-2">
+              <Palette className="w-4 h-4" />
+              Mermaid Diagrams
+            </h2>
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              Dynamic rendering of technical diagrams and flowcharts directly within MDX content.
+            </p>
+            <Mermaid chart={`
+graph LR
+    A[Input] --> B(Process)
+    B --> C{Decision}
+    C -->|Yes| D[Result]
+    C -->|No| E[Retry]
+                        `} />
+          </div>
+
+          {/* Video Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8 flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Premium Video Player
+            </h2>
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              A Null MDX-styled responsive video wrapper with custom controls and premium overlays for MDX content.
+            </p>
+            <Video
+              src="https://framerusercontent.com/assets/7mDToL9pLp2q8L9D4L1.mp4"
+              caption="Demonstrating the premium video component with custom controls."
+            />
+          </div>
+
+          {/* AskAI Section */}
+          <div>
+            <h2 className="text-[12px] font-bold uppercase tracking-[0.2em] text-foreground/50 mb-8">AI Assistant Overlay</h2>
+            <p className="text-muted-foreground mb-8 text-[15px] leading-relaxed">
+              A sophisticated chat dialog designed for contextual AI interactions across the blog and docs.
+            </p>
+            <div className="flex items-center gap-4 p-8 border border-dashed border-border/40 rounded-2xl bg-muted/5">
+              {isAIEnabled() && <AskAI />}
+              <span className="text-sm font-medium text-muted-foreground/60 uppercase tracking-widest text-[11px]">Click to launch context-aware bot</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  )
 }

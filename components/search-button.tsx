@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Search } from "lucide-react"
 import { SearchDialog } from "./search-dialog"
+import { Kbd } from "./ui/kbd"
 
 export function SearchButton() {
   const [open, setOpen] = useState(false)
@@ -23,9 +24,17 @@ export function SearchButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="focus:border-input focus-visible:border-input disabled:border-input border-input hover:border-input focus-visible:ring-offset-background outline-none has-[focus-visible]:ring-2 inline-flex shrink-0 cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap text-nowrap border font-medium transition focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:ring-0 [&>svg]:pointer-events-none [&>svg]:size-4 [&_svg]:shrink-0 bg-secondary text-foreground hover:bg-muted focus:bg-muted focus-visible:bg-muted px-3 text-sm has-[>kbd]:gap-2 has-[>svg]:px-2 has-[>kbd]:pr-[6px] rounded-lg hover:text-foreground! h-7 group hidden font-normal text-muted-foreground md:flex" aria-label="Search…">
-        <div className="text-start pr-3">Search…</div>
-        <kbd className="group-hover:border-input flex h-5 w-fit items-center justify-center px-2 gap-2 rounded-[6px] border border-border font-sans text-xs"><span>/</span></kbd>
+        className="group relative flex h-9 w-full items-center justify-between rounded-xl border border-border/40 bg-muted/20 px-3 text-sm text-muted-foreground/60 transition-all hover:bg-muted/40 hover:text-foreground md:w-64"
+        aria-label="Search"
+      >
+        <div className="flex items-center gap-2.5">
+          <Search className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100 transition-opacity" />
+          <span className="font-medium tracking-tight whitespace-nowrap text-xs hidden sm:block">Search or type a command...</span>
+        </div>
+        <div className="flex items-center gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+          <Kbd className="bg-background/80 border-border/40 text-[10px] h-4.5 min-w-[18px] px-1 font-bold">⌘</Kbd>
+          <Kbd className="bg-background/80 border-border/40 text-[10px] h-4.5 min-w-[18px] px-1 font-bold">K</Kbd>
+        </div>
       </button>
       <SearchDialog open={open} onOpenChange={setOpen} />
     </>

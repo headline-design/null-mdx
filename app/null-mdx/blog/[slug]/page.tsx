@@ -3,11 +3,14 @@ import { MDXContent } from "@/components/mdx-content"
 import { getAllContent, getContentBySlug } from "@/lib/content"
 import { BlogPagination } from "@/components/blog-pagination"
 import { Author } from "@/components/author"
+import { AskAI } from "@/components/ask-ai"
 import { SocialShare } from "@/components/social-share"
 import { NewsletterCTA } from "@/components/newsletter-cta"
 import { calculateReadingTime } from "@/lib/utils/reading-time"
-import { siteConfig } from "@/lib/site-config"
+import { siteConfig, isAIEnabled } from "@/lib/site-config"
 import type { Metadata } from "next"
+import Link from "next/link"
+import { ChevronRight, Clock } from "lucide-react"
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
@@ -46,61 +49,60 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
-  const currentIndex = allPosts.findIndex((p) => p.slug === slug)
-  const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
-  const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
+  // Get related posts (exclude current)
+  // For now just get latest 2 that aren't the current one
+  const currentIndex = allPosts.findIndex(p => p.slug === slug)
+  const prevPost = allPosts[currentIndex + 1]
+  const nextPost = allPosts[currentIndex - 1]
+
+  const relPosts = allPosts
+    .filter(p => p.slug !== slug)
+    .slice(0, 3)
+
   const readingTime = calculateReadingTime(post.content)
   const fullUrl = `${siteConfig.url}/blog/${slug}`
 
   return (
     <>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-12 pb-24">
-        <article className="flex w-full flex-col gap-8">
-          <header className="mb-8">
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl text-balance">
+      <main className="mx-auto w-full max-w-[1200px] px-6 py-20 md:py-32">
+        <div className="max-w-3xl mx-auto">
+          <nav className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-widest text-muted-foreground/40 mb-12">
+            <Link href="/blog" className="hover:text-primary transition-colors">Knowledge Base</Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="truncate">{post.meta.tags?.[0] || "Security Bulletin"}</span>
+          </nav>
+
+          <header className="mb-16">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1]">
               {post.meta.title}
             </h1>
-            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-b border-border/40 pb-8">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-lg shadow-primary/20">
-                  {siteConfig.author.name.charAt(0)}
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-foreground">{post.meta.author || siteConfig.author.name}</span>
-                  <span className="text-[12px] opacity-60">Author</span>
-                </div>
+            <p className="text-xl md:text-2xl text-muted-foreground/80 leading-relaxed mb-10 font-medium tracking-tight">
+              {post.meta.description}
+            </p>
+
+            <div className="flex items-center gap-3 py-6 border-y border-border/10 mb-10">
+              <div className="h-6 w-6 rounded-lg bg-foreground flex items-center justify-center text-[10px] font-bold text-background rotate-45">
+                <span className="-rotate-45 font-bold">▲</span>
               </div>
-              <div className="h-8 w-[1px] bg-border/40" />
-              <div className="flex flex-col">
-                <time dateTime={post.meta.date} className="font-medium text-foreground">
-                  {post.meta.date && new Date(post.meta.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
-                <span className="text-[12px] opacity-60">Published</span>
+              <span className="text-[13px] font-bold uppercase tracking-wider text-foreground">{post.meta.author || "Security Team"}</span>
+            </div>
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-4 border-b border-border/10 text-[13px] font-bold uppercase tracking-widest text-muted-foreground/40">
+              <div className="flex items-center gap-6">
+                <span className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 opacity-40" />
+                  {readingTime}
+                </span>
+                {isAIEnabled() && <AskAI />}
               </div>
-              <div className="h-8 w-[1px] bg-border/40" />
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground">{readingTime}</span>
-                <span className="text-[12px] opacity-60">Reading Time</span>
+              <div>
+                Last updated {post.meta.date ? new Date(post.meta.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : ""}
               </div>
             </div>
           </header>
 
-          <div className="prose dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-primary hover:prose-a:underline prose-p:leading-relaxed prose-p:text-lg">
+          <div className="prose dark:prose-invert max-w-none mb-24">
             <MDXContent source={post.content} />
-          </div>
-
-          <div className="mt-16 flex flex-col gap-12 pt-12 border-t border-border/40">
-            <SocialShare title={post.meta.title} url={fullUrl} />
-            <Author
-              name={post.meta.author}
-              email={post.meta.authorEmail}
-              bio={post.meta.authorBio}
-            />
-            <NewsletterCTA />
           </div>
 
           <BlogPagination
@@ -108,19 +110,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             next={nextPost ? { title: nextPost.meta.title, slug: nextPost.slug } : undefined}
           />
 
-          {post.meta.tags && post.meta.tags.length > 0 && (
-            <footer className="mt-12 flex flex-wrap gap-2">
-              {post.meta.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-muted/50 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-muted"
-                >
-                  {tag}
-                </span>
-              ))}
-            </footer>
-          )}
-        </article>
+          <div className="pt-16 border-t border-border/10 space-y-16">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
+              <Author />
+              <SocialShare title={post.meta.title} url={fullUrl} />
+            </div>
+            <NewsletterCTA />
+          </div>
+        </div>
       </main>
     </>
   )

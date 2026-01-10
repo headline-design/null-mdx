@@ -67,6 +67,11 @@ export const siteConfig = {
   // When false, the root page redirects to /docs or /blog based on mode
   isDemo: true,
 
+  // Feature flags
+  features: {
+    aiAssistant: false, // Set to true to enable Ask AI button
+  },
+
   topNav: [
     { label: "Docs", href: "/docs", activated: true },
     { label: "Blog", href: "/blog", activated: true },
@@ -133,4 +138,8 @@ export function isDocsMode() {
 
 export function isDemoMode() {
   return siteConfig.isDemo
+}
+
+export function isAIEnabled() {
+  return siteConfig.features.aiAssistant
 }

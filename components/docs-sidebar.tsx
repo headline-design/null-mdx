@@ -34,7 +34,7 @@ export function DocsSidebar({ navigation }: DocsSidebarProps) {
                   <nav className="w-full min-w-0 flex flex-col gap-y-8 py-3">
                     {navigation.map((section) => (
                       <div key={section.section}>
-                        <div data-sidebar="group-label" className="text-foreground flex h-auto w-full items-center px-2 text-sm font-medium transition-colors duration-100 mb-2.5">
+                        <div data-sidebar="group-label" className="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/30 mb-4 px-3">
                           {section.section}
                         </div>
                         <ul className="flex flex-col gap-1">
@@ -46,11 +46,16 @@ export function DocsSidebar({ navigation }: DocsSidebarProps) {
                                 <Link
                                   href={href}
                                   className={cn(
-                                    "flex h-8 w-full items-center gap-2 rounded-md px-2 text-sm transition-colors hover:bg-muted/50 hover:text-foreground",
-                                    isActive ? "font-medium text-foreground bg-accent" : "text-muted-foreground"
+                                    "flex h-9 w-full items-center justify-between rounded-xl px-3 text-[13.5px] transition-all duration-300",
+                                    isActive
+                                      ? "font-bold text-primary bg-primary/[0.03] ring-1 ring-primary/20 shadow-sm"
+                                      : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
                                   )}
                                 >
                                   <span className="truncate">{item.meta.title}</span>
+                                  {isActive && (
+                                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-in fade-in zoom-in" />
+                                  )}
                                 </Link>
                               </li>
                             )
