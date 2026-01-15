@@ -53,9 +53,11 @@ export function AIChatDialog({ chat, className }: AIChatDialogProps) {
     }
   }, [isOpen])
   
+  const isReady = status === 'ready' || status === 'awaiting'
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || status !== 'ready') return
+    if (!input.trim() || !isReady) return
     send(input)
     setInput('')
     if (textareaRef.current) {
@@ -79,7 +81,7 @@ export function AIChatDialog({ chat, className }: AIChatDialogProps) {
     currentPageContext?.headings
   )
   
-  const isLoading = status === 'streaming' || status === 'submitted'
+  const isLoading = status === 'streaming' || status === 'submitted' || status === 'awaiting'
   const showWelcome = messages.length === 0
   
   return (
@@ -169,7 +171,7 @@ export function AIChatDialog({ chat, className }: AIChatDialogProps) {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={config.ui.placeholder}
-                disabled={status !== 'ready'}
+                disabled={!isReady}
                 rows={1}
                 className={cn(
                   'w-full resize-none rounded-xl border border-border/50 bg-muted/30 px-4 py-3 pr-12',
@@ -181,7 +183,7 @@ export function AIChatDialog({ chat, className }: AIChatDialogProps) {
               />
               <button
                 type="submit"
-                disabled={!input.trim() || status !== 'ready'}
+                disabled={!input.trim() || !isReady}
                 className={cn(
                   'absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center rounded-lg',
                   'bg-primary text-primary-foreground',

@@ -128,16 +128,26 @@ The assistant comes with built-in tools:
 import { tool } from 'ai'
 import { z } from 'zod'
 
-const myCustomTool = tool({
+// Server-executed tool (has execute function)
+const myServerTool = tool({
   description: 'Description for the AI',
-  inputSchema: z.object({
-    param: z.string(),
+  parameters: z.object({
+    query: z.string().describe('The search query'),
   }),
-  async *execute({ param }) {
-    yield { state: 'loading' }
-    // Do something
-    yield { state: 'ready', result: 'done' }
+  execute: async ({ query }) => {
+    // Perform server-side logic
+    const result = await fetchData(query)
+    return { data: result }
   },
+})
+
+// Client-executed tool (no execute function - handled by onToolCall)
+const myClientTool = tool({
+  description: 'Gets data from the browser',
+  parameters: z.object({
+    type: z.string(),
+  }),
+  // No execute = client must provide result via onToolCall
 })
 ```
 

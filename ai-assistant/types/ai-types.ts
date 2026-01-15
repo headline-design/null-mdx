@@ -1,12 +1,7 @@
-import type { UIMessage, InferUITools } from 'ai'
-import type { docsAgentTools } from '../lib/ai-tools'
+import type { Message } from 'ai'
 
-// Core message type for the docs agent
-export type DocsAgentMessage = UIMessage<
-  never,
-  DocsAgentDataTypes,
-  InferUITools<typeof docsAgentTools>
->
+// Re-export Message type for convenience
+export type DocsAgentMessage = Message
 
 // Custom data types for streaming
 export interface DocsAgentDataTypes {

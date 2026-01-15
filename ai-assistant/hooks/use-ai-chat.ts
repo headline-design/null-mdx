@@ -2,10 +2,10 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
-import type { DocsAgentMessage, DocSource, AIAssistantConfig } from '../types/ai-types'
+import type { Message } from 'ai'
+import type { DocSource, AIAssistantConfig } from '../types/ai-types'
 import { mergeConfig } from '../lib/ai-config'
-import { extractPageContext, extractSourcesFromToolOutputs } from '../lib/ai-context'
+import { extractPageContext } from '../lib/ai-context'
 
 interface UseAIChatOptions {
   config?: AIAssistantConfig
@@ -29,37 +29,32 @@ export function useAIChat(options: UseAIChatOptions = {}) {
   // Set up the chat with AI SDK
   const {
     messages,
-    sendMessage,
-    addToolOutput,
+    append,
+    setMessages,
     status,
     error,
-    setMessages,
-  } = useChat<DocsAgentMessage>({
-    transport: new DefaultChatTransport({ 
-      api: '/api/ai-assistant/chat',
-    }),
+    addToolResult,
+  } = useChat({
+    api: '/api/ai-assistant/chat',
     
     // Handle client-side tools
     async onToolCall({ toolCall }) {
       if (toolCall.toolName === 'getPageContext') {
         // Return the current page context
         const context = currentPageContext || extractPageContext()
-        addToolOutput({
-          tool: 'getPageContext',
-          toolCallId: toolCall.toolCallId,
-          output: JSON.stringify({
-            title: context.title,
-            path: context.path,
-            description: '',
-            headings: context.headings,
-            content: context.content.slice(0, 2000),
-          }),
+        return JSON.stringify({
+          title: context.title,
+          path: context.path,
+          description: '',
+          headings: context.headings,
+          content: context.content.slice(0, 2000),
         })
       }
       
       if (toolCall.toolName === 'askConfirmation') {
         // This will be handled by the UI component
-        // The component will call addToolOutput when user responds
+        // The component will call addToolResult when user responds
+        return undefined
       }
     },
   })
@@ -68,9 +63,15 @@ export function useAIChat(options: UseAIChatOptions = {}) {
   useEffect(() => {
     const allSources: DocSource[] = []
     for (const message of messages) {
-      if (message.role === 'assistant' && message.parts) {
-        const messageSources = extractSourcesFromToolOutputs(message.parts as unknown[])
-        allSources.push(...messageSources)
+      if (message.role === 'assistant' && message.toolInvocations) {
+        for (const invocation of message.toolInvocations) {
+          if (invocation.toolName === 'searchDocs' && invocation.state === 'result' && invocation.result) {
+            const result = invocation.result as { sources?: DocSource[] }
+            if (result.sources) {
+              allSources.push(...result.sources)
+            }
+          }
+        }
       }
     }
     setSources(allSources)
@@ -122,11 +123,14 @@ export function useAIChat(options: UseAIChatOptions = {}) {
   // Toggle the chat
   const toggle = useCallback(() => setIsOpen(prev => !prev), [])
   
+  // Check if chat is ready to send
+  const isReady = status === 'ready' || status === 'awaiting'
+  
   // Send a message
   const send = useCallback((text: string) => {
-    if (!text.trim() || status !== 'ready') return
-    sendMessage({ text })
-  }, [sendMessage, status])
+    if (!text.trim() || !isReady) return
+    append({ role: 'user', content: text })
+  }, [append, isReady])
   
   // Clear chat history
   const clear = useCallback(() => {
@@ -136,12 +140,11 @@ export function useAIChat(options: UseAIChatOptions = {}) {
   
   // Handle confirmation tool responses
   const handleConfirmation = useCallback((toolCallId: string, confirmed: boolean) => {
-    addToolOutput({
-      tool: 'askConfirmation',
+    addToolResult({
       toolCallId,
-      output: confirmed ? 'User confirmed' : 'User declined',
+      result: confirmed ? 'User confirmed' : 'User declined',
     })
-  }, [addToolOutput])
+  }, [addToolResult])
   
   return {
     // State
@@ -163,7 +166,7 @@ export function useAIChat(options: UseAIChatOptions = {}) {
     send,
     clear,
     handleConfirmation,
-    addToolOutput,
+    addToolResult,
   }
 }
 

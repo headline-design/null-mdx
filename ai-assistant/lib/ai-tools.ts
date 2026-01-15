@@ -2,22 +2,29 @@ import { tool } from 'ai'
 import { z } from 'zod'
 import type { DocSearchResult, DocSource } from '../types/ai-types'
 
-// Search documentation tool - server-executed with streaming output
+// Search documentation tool - server-executed
 export const searchDocsTool = tool({
   description: 'Search the documentation for relevant pages and content. Use this when users ask about specific topics, features, or concepts.',
-  inputSchema: z.object({
+  parameters: z.object({
     query: z.string().describe('The search query - keywords, concepts, or questions'),
     limit: z.number().optional().default(5).describe('Maximum number of results to return'),
   }),
-  async *execute({ query, limit = 5 }) {
-    yield { state: 'loading' as const }
-    
+  execute: async ({ query, limit = 5 }) => {
     try {
-      // This will call the search API endpoint
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/ai-assistant/search?q=${encodeURIComponent(query)}&limit=${limit}`)
+      // Get the base URL from environment or construct it
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : 'http://localhost:3000'
+      
+      const response = await fetch(`${baseUrl}/api/ai-assistant/search?q=${encodeURIComponent(query)}&limit=${limit}`)
       
       if (!response.ok) {
-        throw new Error('Search failed')
+        return {
+          results: [],
+          sources: [],
+          totalCount: 0,
+          error: 'Search failed',
+        }
       }
       
       const results: DocSearchResult[] = await response.json()
@@ -27,18 +34,16 @@ export const searchDocsTool = tool({
         title: r.title,
         path: r.path,
         snippet: r.description || r.content.slice(0, 150) + '...',
-        relevance: 1 - (i * 0.1), // Simple relevance scoring based on position
+        relevance: 1 - (i * 0.1),
       }))
       
-      yield {
-        state: 'ready' as const,
+      return {
         results,
         sources,
         totalCount: results.length,
       }
     } catch (error) {
-      yield {
-        state: 'ready' as const,
+      return {
         results: [],
         sources: [],
         totalCount: 0,
@@ -48,38 +53,33 @@ export const searchDocsTool = tool({
   },
 })
 
-// Get current page context tool - client-executed
+// Get current page context tool - client-executed (no execute function = requires client result)
 export const getPageContextTool = tool({
   description: 'Get information about the current documentation page the user is viewing. Use this when users ask "what is this page about?" or reference "this page".',
-  inputSchema: z.object({
-    path: z.string().optional().describe('The current page path (auto-detected if not provided)'),
-  }),
-  outputSchema: z.object({
-    title: z.string(),
-    path: z.string(),
-    description: z.string().optional(),
-    headings: z.array(z.string()),
-    content: z.string(),
+  parameters: z.object({
+    includeContent: z.boolean().optional().default(true).describe('Whether to include the page content'),
   }),
 })
 
 // Suggest navigation tool - server-executed
 export const suggestNavigationTool = tool({
   description: 'Suggest related documentation pages or next steps for the user. Use this to help users discover relevant content.',
-  inputSchema: z.object({
+  parameters: z.object({
     currentPage: z.string().optional().describe('The page the user is currently on'),
     topic: z.string().optional().describe('The topic or concept the user is interested in'),
     intent: z.enum(['related', 'deeper', 'overview', 'next-steps']).default('related').describe('What kind of suggestions to provide'),
   }),
-  async *execute({ currentPage, topic, intent }) {
-    yield { state: 'loading' as const }
-    
+  execute: async ({ currentPage, topic, intent }) => {
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : 'http://localhost:3000'
+      
       const searchQuery = topic || currentPage || ''
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/ai-assistant/search?q=${encodeURIComponent(searchQuery)}&limit=5`)
+      const response = await fetch(`${baseUrl}/api/ai-assistant/search?q=${encodeURIComponent(searchQuery)}&limit=5`)
       
       if (!response.ok) {
-        throw new Error('Navigation lookup failed')
+        return { suggestions: [], intent, error: 'Navigation lookup failed' }
       }
       
       const results: DocSearchResult[] = await response.json()
@@ -95,29 +95,24 @@ export const suggestNavigationTool = tool({
           reason: getNavigationReason(intent, r),
         }))
       
-      yield {
-        state: 'ready' as const,
-        suggestions,
-        intent,
-      }
+      return { suggestions, intent }
     } catch (error) {
-      yield {
-        state: 'ready' as const,
+      return {
         suggestions: [],
+        intent,
         error: error instanceof Error ? error.message : 'Failed to get suggestions',
       }
     }
   },
 })
 
-// Confirmation tool for sensitive actions - client-executed
+// Confirmation tool for sensitive actions - client-executed (no execute function)
 export const askConfirmationTool = tool({
   description: 'Ask the user for confirmation before performing an action. Use sparingly.',
-  inputSchema: z.object({
+  parameters: z.object({
     message: z.string().describe('The confirmation message to show the user'),
     actionDescription: z.string().describe('Description of what will happen if confirmed'),
   }),
-  outputSchema: z.string(),
 })
 
 // Helper function to generate navigation reasons

@@ -2,11 +2,11 @@
 
 import { User, Bot, Search, Navigation, AlertCircle, Check, X, Loader2, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { DocsAgentMessage, DocSource } from '../types/ai-types'
-import { AICitation } from './ai-citation'
+import type { Message } from 'ai'
+import type { DocSource } from '../types/ai-types'
 
 interface AIChatMessagesProps {
-  messages: DocsAgentMessage[]
+  messages: Message[]
   sources: DocSource[]
   onConfirmation: (toolCallId: string, confirmed: boolean) => void
   isLoading?: boolean
@@ -44,7 +44,7 @@ export function AIChatMessages({
 }
 
 interface MessageBubbleProps {
-  message: DocsAgentMessage
+  message: Message
   sources: DocSource[]
   onConfirmation: (toolCallId: string, confirmed: boolean) => void
 }
@@ -69,65 +69,29 @@ function MessageBubble({ message, sources, onConfirmation }: MessageBubbleProps)
         'flex flex-col gap-2 max-w-[85%]',
         isUser && 'items-end'
       )}>
-        {message.parts.map((part, index) => (
-          <MessagePart
-            key={index}
-            part={part}
-            isUser={isUser}
-            sources={sources}
+        {/* Text content */}
+        {message.content && (
+          <div className={cn(
+            'rounded-xl px-4 py-2.5 text-sm',
+            isUser 
+              ? 'bg-primary text-primary-foreground' 
+              : 'bg-muted/50 text-foreground'
+          )}>
+            <MessageContent content={message.content} />
+          </div>
+        )}
+        
+        {/* Tool invocations */}
+        {message.toolInvocations?.map((toolInvocation) => (
+          <ToolInvocationPart
+            key={toolInvocation.toolCallId}
+            toolInvocation={toolInvocation}
             onConfirmation={onConfirmation}
           />
         ))}
       </div>
     </div>
   )
-}
-
-interface MessagePartProps {
-  part: DocsAgentMessage['parts'][number]
-  isUser: boolean
-  sources: DocSource[]
-  onConfirmation: (toolCallId: string, confirmed: boolean) => void
-}
-
-function MessagePart({ part, isUser, sources, onConfirmation }: MessagePartProps) {
-  switch (part.type) {
-    case 'text':
-      return (
-        <div className={cn(
-          'rounded-xl px-4 py-2.5 text-sm',
-          isUser 
-            ? 'bg-primary text-primary-foreground' 
-            : 'bg-muted/50 text-foreground'
-        )}>
-          <MessageContent content={part.text} />
-        </div>
-      )
-    
-    // Search tool states
-    case 'tool-searchDocs':
-      return <SearchToolPart part={part} />
-    
-    // Navigation tool states
-    case 'tool-suggestNavigation':
-      return <NavigationToolPart part={part} />
-    
-    // Confirmation tool states
-    case 'tool-askConfirmation':
-      return (
-        <ConfirmationToolPart
-          part={part}
-          onConfirmation={onConfirmation}
-        />
-      )
-    
-    // Page context tool states
-    case 'tool-getPageContext':
-      return <PageContextToolPart part={part} />
-    
-    default:
-      return null
-  }
 }
 
 // Render markdown-like content
@@ -183,29 +147,73 @@ function MessageContent({ content }: { content: string }) {
   )
 }
 
-// Search tool part
-function SearchToolPart({ part }: { part: any }) {
-  const { state, input, output } = part
+interface ToolInvocationPartProps {
+  toolInvocation: {
+    toolCallId: string
+    toolName: string
+    args: unknown
+    state: 'partial-call' | 'call' | 'result'
+    result?: unknown
+  }
+  onConfirmation: (toolCallId: string, confirmed: boolean) => void
+}
+
+function ToolInvocationPart({ toolInvocation, onConfirmation }: ToolInvocationPartProps) {
+  const { toolName, args, state, result, toolCallId } = toolInvocation
+  const input = args as Record<string, unknown>
+  const output = result as Record<string, unknown> | undefined
   
-  if (state === 'input-available' || state === 'input-streaming') {
+  switch (toolName) {
+    case 'searchDocs':
+      return <SearchToolPart state={state} input={input} output={output} />
+    case 'suggestNavigation':
+      return <NavigationToolPart state={state} output={output} />
+    case 'askConfirmation':
+      return (
+        <ConfirmationToolPart
+          state={state}
+          input={input}
+          output={output}
+          toolCallId={toolCallId}
+          onConfirmation={onConfirmation}
+        />
+      )
+    case 'getPageContext':
+      return <PageContextToolPart state={state} />
+    default:
+      return null
+  }
+}
+
+// Search tool part
+function SearchToolPart({ 
+  state, 
+  input, 
+  output 
+}: { 
+  state: string
+  input: Record<string, unknown>
+  output?: Record<string, unknown>
+}) {
+  if (state === 'partial-call' || state === 'call') {
     return (
       <div className="flex items-center gap-2 rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
         <Search className="h-4 w-4" />
-        <span>Searching for "{input?.query}"...</span>
+        <span>Searching for "{input?.query as string}"...</span>
         <Loader2 className="h-3 w-3 animate-spin" />
       </div>
     )
   }
   
-  if (state === 'output-available' && output) {
-    const results = output.results || []
-    const count = output.totalCount || 0
+  if (state === 'result' && output) {
+    const results = (output.results || []) as Array<{ path: string; title: string; description?: string }>
+    const count = (output.totalCount || results.length) as number
     
     if (count === 0) {
       return (
         <div className="flex items-center gap-2 rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
           <Search className="h-4 w-4" />
-          <span>No results found for "{input?.query}"</span>
+          <span>No results found for "{input?.query as string}"</span>
         </div>
       )
     }
@@ -217,7 +225,7 @@ function SearchToolPart({ part }: { part: any }) {
           <span>Found {count} result{count !== 1 ? 's' : ''}</span>
         </div>
         <div className="divide-y divide-border/30">
-          {results.slice(0, 3).map((result: any, i: number) => (
+          {results.slice(0, 3).map((result, i: number) => (
             <a
               key={i}
               href={result.path}
@@ -239,23 +247,18 @@ function SearchToolPart({ part }: { part: any }) {
     )
   }
   
-  if (state === 'output-error') {
-    return (
-      <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-        <AlertCircle className="h-4 w-4" />
-        <span>Search failed</span>
-      </div>
-    )
-  }
-  
   return null
 }
 
 // Navigation tool part
-function NavigationToolPart({ part }: { part: any }) {
-  const { state, output } = part
-  
-  if (state === 'input-available') {
+function NavigationToolPart({ 
+  state, 
+  output 
+}: { 
+  state: string
+  output?: Record<string, unknown>
+}) {
+  if (state === 'partial-call' || state === 'call') {
     return (
       <div className="flex items-center gap-2 rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
         <Navigation className="h-4 w-4" />
@@ -265,7 +268,13 @@ function NavigationToolPart({ part }: { part: any }) {
     )
   }
   
-  if (state === 'output-available' && output?.suggestions?.length > 0) {
+  if (state === 'result' && output) {
+    const suggestions = (output.suggestions || []) as Array<{ path: string; title: string; reason: string }>
+    
+    if (suggestions.length === 0) {
+      return null
+    }
+    
     return (
       <div className="rounded-lg border border-border/50 bg-muted/20 overflow-hidden">
         <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-xs text-muted-foreground">
@@ -273,7 +282,7 @@ function NavigationToolPart({ part }: { part: any }) {
           <span>Related pages</span>
         </div>
         <div className="divide-y divide-border/30">
-          {output.suggestions.map((suggestion: any, i: number) => (
+          {suggestions.map((suggestion, i: number) => (
             <a
               key={i}
               href={suggestion.path}
@@ -296,18 +305,22 @@ function NavigationToolPart({ part }: { part: any }) {
 
 // Confirmation tool part
 function ConfirmationToolPart({ 
-  part, 
+  state,
+  input,
+  output,
+  toolCallId,
   onConfirmation 
 }: { 
-  part: any
+  state: string
+  input: Record<string, unknown>
+  output?: Record<string, unknown>
+  toolCallId: string
   onConfirmation: (toolCallId: string, confirmed: boolean) => void 
 }) {
-  const { state, input, output, toolCallId } = part
-  
-  if (state === 'input-available') {
+  if (state === 'call') {
     return (
       <div className="rounded-lg border border-border/50 bg-muted/20 p-3">
-        <p className="text-sm mb-3">{input?.message}</p>
+        <p className="text-sm mb-3">{input?.message as string}</p>
         <div className="flex gap-2">
           <button
             onClick={() => onConfirmation(toolCallId, true)}
@@ -328,8 +341,8 @@ function ConfirmationToolPart({
     )
   }
   
-  if (state === 'output-available') {
-    const confirmed = output?.includes('confirmed')
+  if (state === 'result') {
+    const confirmed = String(output).includes('confirmed')
     return (
       <div className={cn(
         'flex items-center gap-2 rounded-lg px-3 py-2 text-sm',
@@ -354,10 +367,8 @@ function ConfirmationToolPart({
 }
 
 // Page context tool part
-function PageContextToolPart({ part }: { part: any }) {
-  const { state } = part
-  
-  if (state === 'input-available') {
+function PageContextToolPart({ state }: { state: string }) {
+  if (state === 'partial-call' || state === 'call') {
     return (
       <div className="flex items-center gap-2 rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
         <FileText className="h-4 w-4" />
