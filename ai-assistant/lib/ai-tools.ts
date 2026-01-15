@@ -12,9 +12,9 @@ export const searchDocsTool = tool({
   execute: async ({ query, limit = 5 }) => {
     try {
       // Get the base URL from environment or construct it
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
-        : 'http://localhost:3000'
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL 
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+        || 'http://localhost:3000'
       
       const response = await fetch(`${baseUrl}/api/ai-assistant/search?q=${encodeURIComponent(query)}&limit=${limit}`)
       
@@ -71,9 +71,9 @@ export const suggestNavigationTool = tool({
   }),
   execute: async ({ currentPage, topic, intent }) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
-        : 'http://localhost:3000'
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL 
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+        || 'http://localhost:3000'
       
       const searchQuery = topic || currentPage || ''
       const response = await fetch(`${baseUrl}/api/ai-assistant/search?q=${encodeURIComponent(searchQuery)}&limit=5`)
