@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { siteConfig } from "@/lib/site-config"
 import { SkipNav } from "@/components/skip-nav"
 import { Header } from "@/components/header"
+import { AIAssistantProvider } from "@/ai-assistant"
 
 import "./globals.css"
 
@@ -48,11 +49,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} ${geistMono.variable} flex min-h-screen flex-col font-sans antialiased `}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <SkipNav />
-           <Header />
-           
-          {children}
-          
+          <AIAssistantProvider
+            config={{
+              ui: {
+                title: `${siteConfig.name} Assistant`,
+                welcomeMessage: `Hi! I can help you navigate the ${siteConfig.name} documentation, explain concepts, and find what you need. What would you like to know?`,
+                placeholder: 'Ask about the docs...',
+              },
+            }}
+          >
+            <SkipNav />
+            <Header />
+            {children}
+          </AIAssistantProvider>
         </ThemeProvider>
       </body>
     </html>
