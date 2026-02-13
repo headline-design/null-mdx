@@ -54,23 +54,18 @@ export const siteConfig = {
   author: {
     name: "Null Team",
     email: "hello@null.dev",
-    twitter: "@ussaaron_",
-    github: "headline-design",
+    twitter: "@nulldev",
+    github: "null-dev",
   },
 
   // Social links
   social: {
-    twitter: "https://twitter.com/ussaaron_",
-    github: "https://github.com/headline-design",
+    twitter: "https://twitter.com/nulldev",
+    github: "https://github.com/null-dev",
   },
 
   // When false, the root page redirects to /docs or /blog based on mode
   isDemo: true,
-
-  // Feature flags
-  features: {
-    aiAssistant: false, // Set to true to enable Ask AI button
-  },
 
   topNav: [
     { label: "Docs", href: "/docs", activated: true },
@@ -92,22 +87,36 @@ export const siteConfig = {
         links: [
           { label: "Docs", href: "/docs" },
           { label: "Blog", href: "/blog" },
-          { label: "Design System", href: "/design" },
-          { label: "Assets", href: "/assets" },
+          { label: "API", href: "/docs/api/overview" },
+          { label: "About", href: "/about" },
+          { label: "Design", href: "/design" },
+        ],
+      },
+      {
+        title: "Company",
+        links: [
+          { label: "Docs", href: "/docs" },
+          { label: "Blog", href: "/blog" },
+          { label: "API", href: "/docs/api/overview" },
+          { label: "About", href: "/about" },
+          { label: "Design", href: "/design" },
         ],
       },
       {
         title: "Resources",
         links: [
-          { label: "API Reference", href: "/docs/api/overview" },
+          { label: "Docs", href: "/docs" },
+          { label: "Blog", href: "/blog" },
+          { label: "API", href: "/docs/api/overview" },
           { label: "About", href: "/about" },
+          { label: "Design", href: "/design" },
         ],
       },
       {
         title: "Social",
         links: [
-          { label: "Twitter", href: "https://twitter.com/ussaaron_", icon: <SimpleIconsTwitterIcon className="h-4 w-4 mr-1 shrink-0" /> },
-          { label: "GitHub", href: "https://github.com/headline-design", icon: <GithubIcon className="h-4 w-4 mr-1 shrink-0" /> },
+          { label: "Twitter", href: "https://twitter.com/nulldev", icon: <SimpleIconsTwitterIcon className="h-4 w-4 mr-1 shrink-0" /> },
+          { label: "GitHub", href: "https://github.com/null-dev", icon: <GithubIcon className="h-4 w-4 mr-1 shrink-0" /> },
         ],
       },
     ],
@@ -124,8 +133,4 @@ export function isDocsMode() {
 
 export function isDemoMode() {
   return siteConfig.isDemo
-}
-
-export function isAIEnabled() {
-  return siteConfig.features.aiAssistant
 }

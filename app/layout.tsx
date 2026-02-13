@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { siteConfig } from "@/lib/site-config"
 import { SkipNav } from "@/components/skip-nav"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Toaster } from "sonner"
 
 import "./globals.css"
 
@@ -38,7 +36,7 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} - ${siteConfig.tagline}`,
     description: siteConfig.description,
   },
-  generator: 'v0.app'
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -51,11 +49,10 @@ export default function RootLayout({
       <body className={`${geist.variable} ${geistMono.variable} flex min-h-screen flex-col font-sans antialiased `}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <SkipNav />
-          <Header />
-
+           <Header />
+           
           {children}
-          <Footer />
-          <Toaster position="bottom-right" richColors />
+          
         </ThemeProvider>
       </body>
     </html>

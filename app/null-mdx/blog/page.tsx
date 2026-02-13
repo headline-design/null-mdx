@@ -1,6 +1,5 @@
 import { getAllContent } from "@/lib/content"
 import { BlogCard } from "@/components/blog-card"
-import { NewsletterCTA } from "@/components/newsletter-cta"
 import type { Metadata } from "next"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -22,80 +21,74 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     ? allPosts.filter(post => post.meta.tags?.some(t => t.toLowerCase() === tag.toLowerCase()))
     : allPosts
 
-  // Sort by date desc
-  const sortedPosts = filteredPosts.sort((a, b) => {
-    return new Date(b.meta.date as any).getTime() - new Date(a.meta.date as any).getTime()
-  })
-
   return (
-    <main className="mx-auto w-full max-w-7xl px-0 pt-16">
-      <div className="px-6 md:px-10 border-b border-border/40 pb-6 mb-0">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
-          {tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : "Blog"}
-        </h1>
+    <>
+      <main className="mx-auto w-full max-w-5xl px-4 pt-12 pb-24">
+        <header className="mb-16 text-center">
+          <div className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+            {tag ? `Topic: ${tag}` : "The Blog"}
+          </div>
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-7xl mb-6">
+            {tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : "Writing & Thoughts"}
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed italic">
+            "Deep dives into software engineering, product design, and the future of web development."
+          </p>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <nav className="flex items-center gap-1 overflow-x-auto scrollbar-hide -ml-1 py-1">
+          <nav className="mt-12 flex items-center justify-center gap-2 overflow-x-auto pb-4 scrollbar-hide py-3">
             <Link
               href="/blog"
               className={cn(
-                "rounded-full px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap",
+                "whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
                 !tag
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               All Posts
             </Link>
-            {["Engineering", "Community", "Company News", "Customers", "Changelog"].map((topic) => (
+            {["Introduction", "Tech", "AI", "Design"].map((topic) => (
               <Link
                 key={topic}
-                href={`/blog?tag=${topic.toLowerCase().replace(" ", "-")}`}
+                href={`/blog?tag=${topic.toLowerCase()}`}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap",
-                  tag?.toLowerCase() === topic.toLowerCase().replace(" ", "-")
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground"
+                  "whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+                  tag?.toLowerCase() === topic.toLowerCase()
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 {topic}
               </Link>
             ))}
           </nav>
-        </div>
-      </div>
 
-      {sortedPosts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-border/40">
-          {sortedPosts.map((post, index) => (
-            <div
-              key={post.slug}
-              className={cn(
-                "border-border/40",
-                index % 3 !== 2 ? "lg:border-r" : "",
-                index % 2 !== 1 ? "md:border-r lg:border-r-inherit" : "",
-                "border-b"
-              )}
-            >
-              <BlogCard post={post} />
+          {tag && (
+            <div className="mt-6">
+              <Link href="/blog" className="text-sm font-medium text-primary hover:underline flex items-center justify-center gap-2">
+                &larr; View all posts
+              </Link>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="px-10 py-32 text-center border-t border-border/40">
-          <p className="text-lg text-muted-foreground mb-6">
-            No posts found for this topic yet.
-          </p>
-          <Link href="/blog" className="inline-flex items-center justify-center rounded-lg bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90">
-            View all posts
-          </Link>
-        </div>
-      )}
+          )}
+        </header>
 
-      {/* Newsletter Section */}
-      <section className="px-6 py-24 md:px-10 border-t border-border/40 bg-muted/[0.01]">
-        <NewsletterCTA variant="minimal" />
-      </section>
-    </main>
+        {filteredPosts.length > 0 ? (
+          <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-2">
+            {filteredPosts.map((post, index) => (
+              <BlogCard key={post.slug} post={post} featured={index === 0 && !tag} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border/40 py-24 text-center">
+            <p className="text-base text-muted-foreground italic mb-4">
+              "No posts found for this topic yet."
+            </p>
+            <Link href="/blog" className="text-primary font-bold hover:underline">
+              Clear filters
+            </Link>
+          </div>
+        )}
+      </main>
+    </>
   )
 }
