@@ -15,7 +15,8 @@
 6. [Product Hunt / Launch Copy](#product-hunt--launch-copy)
 7. [Dev.to / Hashnode Article Outline](#devto--hashnode-article-outline)
 8. [Newsletter / Email Announcement](#newsletter--email-announcement)
-9. [Key Links Reference](#key-links-reference)
+9. [Hero Image Prompt](#hero-image-prompt)
+10. [Key Links Reference](#key-links-reference)
 
 ---
 
@@ -448,6 +449,37 @@ Start from nothing. Build everything.
 > - Star on GitHub: https://github.com/headline-design/null-mdx
 >
 > Both templates are MIT licensed. Built for the v0 community.
+
+---
+
+## Hero Image Prompt
+
+Use the following prompt to generate a "Nano Banana" hero image for the blog post and social media. The concept fuses the Null ecosystem's monochrome minimalism with an unexpected, playful banana motif at nanoscale - a visual metaphor for something small, surprising, and packed with energy.
+
+### Primary Hero Prompt (Recommended)
+
+> A hyper-detailed 3D render of a single tiny glowing banana floating at the center of an infinite dark void. The banana is translucent and crystalline, made of frosted glass with faint golden light emanating from inside. Surrounding the banana are concentric rings of thin, luminous white wireframe geometry - like an atom diagram or orbital paths. Scattered around the scene are microscopic floating code fragments rendered as barely-visible monospaced text in a soft gray. The overall palette is near-black background with stark white wireframes and a single warm golden glow from the banana core. The composition is perfectly centered, symmetric, and minimal. Ultra-clean, editorial, abstract-scientific aesthetic. No text. No people. 8K resolution, studio lighting, shallow depth of field with soft bokeh on the wireframe rings.
+
+### Alternate Prompt A (More Abstract / Geometric)
+
+> An abstract, top-down view of a nanoscale banana cross-section rendered as a scientific diagram. The banana shape is outlined in precise white vectors on a pure black background, with its interior filled with a dense hexagonal lattice pattern in muted gold. Radiating outward from the banana silhouette are thin concentric circles in light gray, like ripples or signal waves. Tiny node-and-edge graph structures float in the negative space, suggesting a network or compilation pipeline. The feel is somewhere between a biology textbook illustration and a developer conference keynote slide. Perfectly minimal, perfectly sharp. No gradients, no noise, no text. Flat vector aesthetic with subtle depth from layered opacity. 4K, dark mode.
+
+### Alternate Prompt B (Photographic / Editorial)
+
+> A real unpeeled banana placed on a matte black surface, shot from directly above with hard studio lighting creating dramatic shadows. The banana is small - deliberately miniature, sitting on a tiny black pedestal like a museum artifact. Around it, arranged in a precise grid, are miniature black cubes and white spheres, like abstract data structures. The scene looks like a high-end product photograph for a tech company. Shallow depth of field, the banana is razor-sharp while the surrounding objects blur softly. Color palette is almost entirely monochrome except for the natural yellow of the banana. Clean, premium, slightly surreal. No text, no logos. Shot on medium format, 100MP.
+
+### Alternate Prompt C (Cyberpunk / Neon Minimal)
+
+> A small, stylized banana icon rendered in a single continuous neon-white line on a pitch-black background. The line art is precise and geometric, almost like a circuit board trace that happens to form a banana shape. From the banana, thin glowing lines branch outward in a tree-like structure, resembling a file system hierarchy or AST (abstract syntax tree). Each branch terminates in a tiny bright dot. The overall shape is roughly circular, like a mandala made of code. The glow is subtle - soft white bloom on the lines, no color except pure white on pure black. The image feels like a loading screen for a developer tool from the future. Perfectly centered, perfectly balanced. No text. 4K, vector-crisp edges.
+
+### Usage Notes
+
+- **Blog Post Header**: Use the Primary prompt at a 16:9 or 2:1 aspect ratio for a wide blog hero banner
+- **Social Cards (X/LinkedIn)**: Use any prompt at 1200x630px (1.91:1) for Open Graph images
+- **GitHub Social Preview**: Use at 1280x640px for the repository social preview card
+- **Product Hunt Gallery**: Generate at 1270x760px for the Product Hunt image carousel
+- **Square Crops**: Any prompt works at 1:1 for Instagram or thumbnail usage
+- The "nano banana" should become a recognizable visual identity element for the Null ecosystem - small, unexpected, technically precise
 
 ---
 
