@@ -452,34 +452,48 @@ Start from nothing. Build everything.
 
 ---
 
-## Hero Image Prompt
+## Hero Image Prompt (for Nano Banana)
 
-Use the following prompt to generate a "Nano Banana" hero image for the blog post and social media. The concept fuses the Null ecosystem's monochrome minimalism with an unexpected, playful banana motif at nanoscale - a visual metaphor for something small, surprising, and packed with energy.
+Use the following prompts with **Nano Banana** (or Nano Banana Pro) to generate hero imagery for the blog post, social cards, and template previews. Each prompt is designed for the Null MDX / Null Proxy ecosystem aesthetic.
 
-### Primary Hero Prompt (Recommended)
+### Primary Hero Prompt (Recommended - Blog Post Banner)
 
-> A hyper-detailed 3D render of a single tiny glowing banana floating at the center of an infinite dark void. The banana is translucent and crystalline, made of frosted glass with faint golden light emanating from inside. Surrounding the banana are concentric rings of thin, luminous white wireframe geometry - like an atom diagram or orbital paths. Scattered around the scene are microscopic floating code fragments rendered as barely-visible monospaced text in a soft gray. The overall palette is near-black background with stark white wireframes and a single warm golden glow from the banana core. The composition is perfectly centered, symmetric, and minimal. Ultra-clean, editorial, abstract-scientific aesthetic. No text. No people. 8K resolution, studio lighting, shallow depth of field with soft bokeh on the wireframe rings.
+> A sleek, dark-mode developer workspace floating in a void. At the center is a glowing transparent editor window showing MDX syntax highlighted in cool whites and soft blues against a near-black background. Behind the editor, faintly visible, is an abstract node graph representing a compilation pipeline - interconnected dots and lines spreading outward like a constellation. Subtle light rays pass through the editor as if the code is being compiled in real-time. The overall aesthetic is ultra-minimal, monochromatic with slight blue accents. The vibe is futuristic developer tooling - clean, precise, powerful. No text overlays. No people. Cinematic composition, wide 16:9 aspect ratio, shallow depth of field.
 
-### Alternate Prompt A (More Abstract / Geometric)
+### Alternate Prompt A (Abstract Architecture)
 
-> An abstract, top-down view of a nanoscale banana cross-section rendered as a scientific diagram. The banana shape is outlined in precise white vectors on a pure black background, with its interior filled with a dense hexagonal lattice pattern in muted gold. Radiating outward from the banana silhouette are thin concentric circles in light gray, like ripples or signal waves. Tiny node-and-edge graph structures float in the negative space, suggesting a network or compilation pipeline. The feel is somewhere between a biology textbook illustration and a developer conference keynote slide. Perfectly minimal, perfectly sharp. No gradients, no noise, no text. Flat vector aesthetic with subtle depth from layered opacity. 4K, dark mode.
+> An isometric view of a minimal black architecture - two interconnected structures representing a proxy layer and a content engine. The first structure is a slim, monolith-like gateway emitting thin routing lines outward. The second is a more complex crystalline form with visible internal layers, representing MDX compilation stages (parsing, transforming, rendering). The structures are connected by a single luminous bridge. The entire scene sits on a reflective dark surface. Color palette is strictly monochrome - deep blacks, charcoal grays, and bright white edge lighting. The feel is architectural, technical, and premium. No text. No logos. Clean isometric perspective, 4K.
 
-### Alternate Prompt B (Photographic / Editorial)
+### Alternate Prompt B (Split Composition - MDX + Proxy)
 
-> A real unpeeled banana placed on a matte black surface, shot from directly above with hard studio lighting creating dramatic shadows. The banana is small - deliberately miniature, sitting on a tiny black pedestal like a museum artifact. Around it, arranged in a precise grid, are miniature black cubes and white spheres, like abstract data structures. The scene looks like a high-end product photograph for a tech company. Shallow depth of field, the banana is razor-sharp while the surrounding objects blur softly. Color palette is almost entirely monochrome except for the natural yellow of the banana. Clean, premium, slightly surreal. No text, no logos. Shot on medium format, 100MP.
+> A split-screen composition divided by a thin glowing vertical line. On the left side, a dark minimal representation of raw markdown and JSX code fragments floating in space, slightly blurred and chaotic. On the right side, the same content rendered as a beautiful, clean web page with sharp typography and structured layout - organized and polished. The transition from left to right tells the story of compilation: chaos becoming order, raw becoming rendered. The palette is black background with white and light gray elements. The dividing line pulses with a subtle white glow. Wide format, editorial, abstract. No UI chrome, no browser frames. 16:9, photorealistic lighting on the rendered side.
 
-### Alternate Prompt C (Cyberpunk / Neon Minimal)
+### Alternate Prompt C (The VM Concept)
 
-> A small, stylized banana icon rendered in a single continuous neon-white line on a pitch-black background. The line art is precise and geometric, almost like a circuit board trace that happens to form a banana shape. From the banana, thin glowing lines branch outward in a tree-like structure, resembling a file system hierarchy or AST (abstract syntax tree). Each branch terminates in a tiny bright dot. The overall shape is roughly circular, like a mandala made of code. The glow is subtle - soft white bloom on the lines, no color except pure white on pure black. The image feels like a loading screen for a developer tool from the future. Perfectly centered, perfectly balanced. No text. 4K, vector-crisp edges.
+> A dark, atmospheric visualization of a sandboxed virtual machine. A translucent cube floats in empty space, its edges defined by thin white wireframe lines. Inside the cube, visible through the semi-transparent walls, are layered horizontal planes representing different compilation stages - each plane slightly illuminated with a soft glow. Small particle effects drift between the layers like data being processed. Outside the cube, the void is pure black with faint grid lines receding into infinity. The image communicates containment, processing, and precision. It feels like looking into the core of a running system. Monochrome palette, white-on-black, with minimal blue accent lighting inside the cube. Centered composition, 4K, cinematic.
 
-### Usage Notes
+### Alternate Prompt D (Minimal Typographic)
 
-- **Blog Post Header**: Use the Primary prompt at a 16:9 or 2:1 aspect ratio for a wide blog hero banner
-- **Social Cards (X/LinkedIn)**: Use any prompt at 1200x630px (1.91:1) for Open Graph images
-- **GitHub Social Preview**: Use at 1280x640px for the repository social preview card
-- **Product Hunt Gallery**: Generate at 1270x760px for the Product Hunt image carousel
-- **Square Crops**: Any prompt works at 1:1 for Instagram or thumbnail usage
-- The "nano banana" should become a recognizable visual identity element for the Null ecosystem - small, unexpected, technically precise
+> A stark black background with a single line of beautifully rendered monospaced code in bright white: the characters ".mdx" at the center, large and sharp. Radiating from the text are extremely fine concentric circles, like ripples from a drop of water, getting progressively fainter as they expand outward. The circles are perfectly geometric and precise. Scattered between the rings are tiny, barely-visible fragments of JSX and markdown syntax. The image is dead simple but striking - it communicates that everything starts from this one file extension. No color except white on black. Perfectly centered. Ultra-high resolution, vector-crisp.
+
+### Generation Settings
+
+| Setting | Recommended Value |
+|---------|-------------------|
+| **Model** | Nano Banana Pro (V2) preferred |
+| **Style** | Photorealistic or Digital Art |
+| **Aspect Ratio** | 16:9 for blog hero, 1.91:1 for OG cards, 1:1 for thumbnails |
+| **Resolution** | 4K (3840x2160) for blog, 1200x630 for social cards |
+| **Negative Prompt** | text, watermark, logo, people, hands, bright colors, gradients, noise, grain |
+
+### Output Usage
+
+- **Blog Post Header**: Primary prompt at 16:9 or 2:1 wide banner
+- **Open Graph / Social Cards (X/LinkedIn)**: Any prompt cropped to 1200x630px
+- **GitHub Social Preview**: Crop to 1280x640px for repository card
+- **Product Hunt Gallery**: 1270x760px for carousel images
+- **v0 Template Thumbnail**: 1:1 square crop for template listing
+- Generate multiple variations and pick the one with the cleanest composition - Nano Banana Pro's editing mode can refine details after initial generation
 
 ---
 
