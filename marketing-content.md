@@ -51,6 +51,7 @@
 > - GitHub Flavored Markdown with remark-gfm
 > - Docs mode + Blog mode (toggle with one config)
 > - Full-text search, Table of Contents, RSS, LLMs.txt
+> - Optional Supabase asset management (inspired by Lee Robinson's approach to object storage at Cursor)
 > - Multi-Zone ready architecture
 
 **Post 4 (The Innovation):**
@@ -122,7 +123,17 @@
 >
 > https://v0.app/templates/null-mdx-OSVvIj4RBu8
 
-**Standalone 5 (Short Banger):**
+**Standalone 5 (Supabase Asset Management):**
+
+> Lee Robinson spent $56K on CMS CDN costs at Cursor. His solution? Drop the CMS, build a simple asset manager on object storage.
+>
+> Null MDX ships with that pattern built-in. Optional Supabase Storage integration with a drag-and-drop upload GUI, optimized image serving, and immutable caching.
+>
+> No CMS markup. No vendor CDN. Just object storage + a few API routes.
+>
+> https://v0.app/templates/null-mdx-OSVvIj4RBu8
+
+**Standalone 6 (Short Banger):**
 
 > The new v0 runs full VMs.
 >
@@ -201,11 +212,13 @@
 > - Auto-generated Table of Contents with scroll tracking
 > - Reading progress indicator for long-form content
 > - RSS feed generation and LLMs.txt for AI discoverability
-> - Multi-Zone ready for proxy integration with parent apps
+> - Multi-Zone ready for integration with parent applications
 > - Built-in design system viewer
-> - Supabase-powered asset management (optional)
+> - Optional Supabase Storage integration for asset management - inspired by Lee Robinson's approach at Cursor, where he replaced a $56K/year CMS CDN with simple object storage and a lightweight upload GUI
 >
-> **Tech Stack:** Next.js 16, Tailwind CSS v4, shadcn/ui, next-mdx-remote, Shiki, Supabase
+> **Tech Stack:** Next.js 16, Tailwind CSS v4, shadcn/ui, next-mdx-remote, Shiki, Supabase (optional)
+>
+> **Note on Supabase:** The Supabase integration is fully optional. Without it, Null MDX gracefully falls back to serving images from the local `/images/` directory. When enabled, you get a full asset management pipeline: drag-and-drop uploads, optimized image rendering via Supabase Storage, immutable CDN caching, and a visual asset manager at `/assets`. Just add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to your environment.
 >
 > **Companion Template:** Pair with Null Proxy for a complete Multi-Zone content system with unified routing under a single domain.
 
@@ -305,9 +318,27 @@ Null MDX is a production-ready Next.js 16 template designed for content-heavy si
 
 - **LLMs.txt**: An AI-friendly content index at `/docs/llms.txt`, making your documentation discoverable by AI agents and language models.
 
-- **Asset Management**: Optional Supabase integration for media uploads and management.
-
 - **Design System Viewer**: A built-in design system page at `/design` that showcases all available components.
+
+**Optional Supabase Asset Management (Inspired by Lee Robinson at Cursor)**
+
+One of the features I'm most proud of is the optional Supabase Storage integration. The inspiration came directly from Lee Robinson's blog post about migrating cursor.com off its CMS (leerob.com/agents).
+
+In that post, Lee describes how Cursor was spending $56,848 on CMS CDN usage after just a few months. The fix was straightforward: host assets in object storage and build a simple GUI for managing them. As Lee put it: "This took only 3 or 4 prompts with the agent to get something decent and workable."
+
+Null MDX ships with exactly that pattern, pre-built. Here's what the Supabase integration provides:
+
+1. **Asset API** (`/api/null-mdx/assets`): A full CRUD API for Supabase Storage. Upload files via multipart form data, list assets sorted by creation date, delete by path. Timestamped filenames prevent collisions. Files are cached with `Cache-Control: max-age=31536000` (1 year, immutable).
+
+2. **Individual Asset Serving** (`/api/null-mdx/assets/[name]`): A proxy route that downloads files from Supabase Storage and serves them with proper MIME types. Supports images (JPEG, PNG, GIF, WebP, SVG), PDFs, and video (MP4, WebM). Responses are marked `immutable` for aggressive CDN caching.
+
+3. **Optimized Image Rendering**: The `getOptimizedImageUrl` utility generates Supabase's image transformation URLs with configurable width and quality parameters. Blog cards and MDX image components use this automatically - meaning every image in your content is optimized without manual intervention.
+
+4. **Asset Manager UI** (`/assets`): A full drag-and-drop upload interface with grid view, one-click URL copying, and deletion. This is the "simple GUI on top of object storage" that Lee described building for Cursor.
+
+5. **Graceful Fallback**: The entire Supabase layer is optional. If `NEXT_PUBLIC_SUPABASE_URL` is not set, all image helpers fall back to serving from the local `/images/` directory. The template works identically either way - Supabase just gives you cloud storage and optimization when you need it.
+
+The key insight from Lee's post applies perfectly here: the cost of the CMS abstraction is rarely worth it for developer-focused content sites. Your content is already code (MDX files in a git repo). Your assets should be in simple, cheap object storage. And the GUI for managing them should be something you can build in a few prompts - or in Null MDX's case, something that ships out of the box.
 
 **Multi-Zone Architecture with Null Proxy**
 
@@ -378,7 +409,7 @@ Start from nothing. Build everything.
 
 > Null MDX is a production-ready Next.js 16 template that brings real MDX compilation to v0 for the first time. Made possible by v0's new sandbox VM architecture, it compiles actual .mdx files server-side with Shiki syntax highlighting, remark/rehype plugins, and custom React components.
 >
-> Toggle between documentation mode and blog mode with a single config change. Get full-text search, auto-generated Table of Contents, RSS feeds, LLMs.txt for AI discoverability, and Multi-Zone support for embedding into larger applications.
+> Toggle between documentation mode and blog mode with a single config change. Get full-text search, auto-generated Table of Contents, RSS feeds, LLMs.txt for AI discoverability, and Multi-Zone support for embedding into larger applications. Optionally connect Supabase for a full asset management pipeline with drag-and-drop uploads, optimized image rendering, and immutable CDN caching - inspired by Lee Robinson's approach to replacing expensive CMS CDNs with simple object storage at Cursor.
 >
 > Pair it with Null Proxy, the companion gateway template, for a complete Multi-Zone content system under a single domain.
 >
@@ -411,8 +442,14 @@ Start from nothing. Build everything.
    - The routing architecture
    - Asset prefix handling
    - Why separation of concerns matters
-7. **Built-in Features Deep Dive**: Search, ToC, RSS, LLMs.txt, design system
-8. **Getting Started**: Fork it, configure it, deploy it
+7. **Optional Supabase Asset Management**: Inspired by Lee Robinson's $56K CMS lesson at Cursor
+   - The "content is just code" philosophy extends to assets
+   - Full CRUD API for Supabase Storage with optimized image rendering
+   - Drag-and-drop asset manager UI
+   - Graceful fallback to local `/images/` when Supabase isn't configured
+   - Why cheap object storage beats CMS CDN pricing every time
+8. **Built-in Features Deep Dive**: Search, ToC, RSS, LLMs.txt, design system
+9. **Getting Started**: Fork it, configure it, deploy it
 9. **What This Means for v0 Templates**: The VM unlocks a new class of templates that require real build tools
 
 **Suggested Tags:** #v0 #nextjs #mdx #vercel #webdev #documentation #opensource
@@ -438,6 +475,7 @@ Start from nothing. Build everything.
 > - Toggles between docs mode and blog mode with one config change
 > - Includes full-text search, Table of Contents, RSS, and LLMs.txt
 > - Ships with a built-in design system viewer
+> - Optional Supabase Storage integration for asset management (inspired by Lee Robinson's object-storage-over-CMS approach at Cursor - works without Supabase too)
 >
 > **The bigger picture:**
 > Null Proxy is the companion template - a Multi-Zone gateway that routes your landing page, docs, and blog under one domain. Two apps. One URL. Deploy independently.
@@ -508,6 +546,7 @@ Use the following prompts with **Nano Banana** (or Nano Banana Pro) to generate 
 | **Null MDX GitHub** | https://github.com/headline-design/null-mdx |
 | **Null Proxy GitHub** | https://github.com/headline-design/null-proxy |
 | **Vercel "New v0" Blog Post** | https://vercel.com/blog/introducing-the-new-v0 |
+| **Lee Robinson - Coding Agents & Complexity Budgets** | https://leerob.com/agents |
 
 ---
 
