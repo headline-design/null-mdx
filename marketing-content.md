@@ -15,8 +15,10 @@
 6. [Product Hunt / Launch Copy](#product-hunt--launch-copy)
 7. [Dev.to / Hashnode Article Outline](#devto--hashnode-article-outline)
 8. [Newsletter / Email Announcement](#newsletter--email-announcement)
-9. [Hero Image Prompt](#hero-image-prompt)
-10. [Key Links Reference](#key-links-reference)
+9. [LinkedIn Long-Form Article](#linkedin-long-form-article)
+10. [X Long-Form Article](#x-long-form-article)
+11. [Hero Image Prompt](#hero-image-prompt)
+12. [Key Links Reference](#key-links-reference)
 
 ---
 
@@ -487,6 +489,213 @@ Start from nothing. Build everything.
 > - Star on GitHub: https://github.com/headline-design/null-mdx
 >
 > Both templates are MIT licensed. Built for the v0 community.
+
+---
+
+## LinkedIn Long-Form Article
+
+### Title: "The Infrastructure Decision Behind Every Documentation Site (And Why Most Teams Get It Wrong)"
+
+---
+
+Last year, Lee Robinson published a post about migrating cursor.com off its headless CMS. The numbers were striking: $56,848 in CDN costs after just a few months, a content workflow that required non-engineers to learn a proprietary editor, and a stack of abstraction layers between the people writing docs and the people reading them.
+
+His conclusion was simple. Content is code. Treat it that way.
+
+That post crystallized something I had been thinking about for a while. As a v0 ambassador building templates for Vercel's AI-native development platform, I kept running into the same architectural gap: every documentation solution available in v0 treated content as a second-class citizen. Hardcoded JSX strings. Static JSON blobs. Basic markdown parsers that couldn't handle the component model that modern documentation requires.
+
+The problem wasn't v0. The problem was that real documentation compilation requires a real runtime - and until February 2026, that runtime didn't exist inside v0.
+
+**What Changed**
+
+When Vercel shipped the new v0, they rebuilt the runtime from the ground up. The platform now runs sandbox-based Linux VMs with full Node.js environments. That's not a marketing line - it's a material infrastructure change. It means v0 can install npm packages, execute build tools, and run compilers. The same compilers that power documentation sites like the Next.js docs, the Tailwind docs, and the Stripe docs.
+
+This is the gap I wanted to close.
+
+**Null MDX: The Architecture**
+
+Null MDX is a Next.js 16 template that compiles real MDX files server-side. MDX - if you're not familiar - is Markdown with JSX support. It lets you write documentation in plain markdown while embedding interactive React components inline. It's the format behind most of the best developer documentation on the web.
+
+The compilation pipeline runs entirely at request time inside v0's sandbox:
+
+1. next-mdx-remote reads .mdx files from a standard content directory and compiles them to React components
+2. Shiki processes code blocks with full language grammars for accurate, theme-aware syntax highlighting
+3. remark and rehype plugins handle GitHub Flavored Markdown, heading anchors, and code formatting
+4. Custom MDX components (callouts, step wizards, tabbed interfaces) are mapped and rendered server-side
+
+The result is documentation that looks and behaves like a polished product - because it is one.
+
+**The Dual-Mode Problem**
+
+One of the more interesting architectural decisions was supporting both documentation and blog formats in a single template. These are different content models: docs are hierarchical (sections, pages, ordering), blogs are chronological (dates, authors, tags). Most teams end up with two separate systems.
+
+Null MDX handles this with a single configuration toggle. The same MDX compilation pipeline, the same component library, the same deployment - just a different content model applied at the routing layer. Switch from `docs` to `blog` in one line of config.
+
+For teams that need both (and most developer-facing companies do), this eliminates an entire class of infrastructure decisions.
+
+**The Asset Management Question**
+
+Lee Robinson's post about Cursor's CMS costs resonated because it exposed a pattern I see constantly: teams paying for content management complexity they don't need.
+
+When your content is MDX files in a Git repository, you don't need a CMS. What you might need is a place to put images and media. Null MDX includes an optional Supabase Storage integration for exactly this purpose:
+
+- A full CRUD API for uploading, listing, and deleting assets
+- Optimized image rendering with configurable width and quality parameters
+- A visual asset manager with drag-and-drop upload
+- Immutable CDN caching (1-year cache headers)
+
+The key word is "optional." If you don't configure Supabase, the template serves images from a local directory. No errors. No degraded experience. Just a different storage backend. This is the kind of progressive enhancement that production infrastructure requires - it works at every scale, from a side project to a company docs site.
+
+**Multi-Zone Composition**
+
+The companion template, Null Proxy, solves the last major architectural problem: domain unification. It's a Next.js routing layer that proxies requests to multiple applications under a single domain.
+
+Your marketing site, your documentation, and your blog can be separate codebases, deployed independently, owned by different teams - but presented to users as one seamless experience. This is the Multi-Zone pattern that Next.js supports natively, packaged as a template you can deploy in minutes.
+
+The separation of concerns here is meaningful for organizations:
+
+- Marketing can ship landing page changes without touching docs
+- Engineering can update documentation without a marketing deploy
+- Content can publish blog posts without coordinating with either team
+- Each app scales independently based on its own traffic patterns
+
+**Why This Matters Beyond Templates**
+
+The larger point is about what v0 has become. It's no longer a code generation tool. It's a development environment that runs real software. The fact that you can open Null MDX in v0, edit an MDX file, and see compiled, syntax-highlighted documentation render live - that's not a demo. That's a workflow.
+
+For engineering leaders evaluating documentation infrastructure, the calculus has changed. The build-versus-buy decision now has a third option: fork a production-ready template in an AI-native environment and customize it to your needs. No vendor lock-in. No CMS subscription. No CDN markup. Just code, in a Git repo, compiled by a real runtime.
+
+Start from nothing. Build everything.
+
+---
+
+**Links:**
+- Null MDX template: https://v0.app/templates/null-mdx-OSVvIj4RBu8
+- Null Proxy template: https://v0.app/templates/null-proxy-4PQrDpMpnP5
+- Live demo: https://null-mdx.vercel.app
+- GitHub: https://github.com/headline-design/null-mdx
+- Lee Robinson's post on content infrastructure: https://leerob.com/agents
+
+#ContentInfrastructure #DevTools #NextJS #Vercel #v0 #Documentation #Engineering #OpenSource
+
+---
+
+## X Long-Form Article
+
+### Format: X Long Post (Notes / Article)
+
+### Title: "I built a docs template that actually compiles markdown inside v0. Here's the whole story."
+
+---
+
+I've been building v0 templates for a while now. As an ambassador, my whole thing is pushing the edges of what you can build inside v0. Most of the time that means finding where the platform breaks - and then figuring out whether the limitation is real or just something nobody has tried yet.
+
+For months, the limitation was MDX.
+
+Every docs template in v0 was faking it. Hardcoded content in JSX. JSON files pretending to be markdown. Maybe a basic parser that could handle bold and headers but choked on anything real. No syntax highlighting. No custom components. No plugin pipeline. Nothing that would actually ship as a documentation site.
+
+The reason was obvious if you thought about it: MDX compilation needs a real Node.js runtime. next-mdx-remote, Shiki, remark, rehype - these aren't browser packages. They need a server. They need `fs`. They need to actually execute.
+
+The old v0 couldn't do that. It generated code. It didn't run it.
+
+Then February 2026 happened.
+
+**The VM changes everything**
+
+Vercel rebuilt v0 from scratch. The new version runs sandbox-based Linux VMs. Real Node.js. Real npm. Real file systems. They described it as being able to "import any GitHub repo and automatically pull environment variables and configurations."
+
+That's not a small change. That's a category change.
+
+The moment I read the announcement I knew what to build. A docs template that runs the full MDX compilation pipeline - server-side, inside v0's sandbox, with zero compromises.
+
+**What Null MDX actually does**
+
+Here's the pipeline that runs on every page load:
+
+1. next-mdx-remote reads `.mdx` files from `/content`
+2. remark-gfm processes GitHub Flavored Markdown (tables, strikethrough, autolinks, task lists)
+3. Shiki tokenizes code blocks with full language grammars and outputs theme-aware highlighted HTML via rehype-pretty-code
+4. rehype-slug and rehype-autolink-headings generate anchor links for every heading
+5. Custom MDX components (Callout, Steps, Tabs, FileTree) get mapped and rendered server-side
+6. The compiled output is a fully interactive React component tree
+
+All of this happens in v0's preview pane. Edit an `.mdx` file, save, watch it compile and render. It's wild.
+
+**One template, two modes**
+
+The thing I'm probably most proud of architecturally: Null MDX does both docs and blog.
+
+Docs mode gives you sidebar navigation, section ordering, hierarchical content structure. Blog mode gives you chronological posts, author cards, tag filtering, reading time estimates. Same compilation pipeline. Same components. Same deployment. One config toggle.
+
+```tsx
+// lib/site-config.tsx
+siteType: "docs" // or "blog" - that's it
+```
+
+Every feature works in both modes. Search, Table of Contents, RSS, reading progress, LLMs.txt. You pick the content model that fits and the template adapts.
+
+**The Supabase thing (a Lee Robinson story)**
+
+So Lee Robinson wrote this post about migrating cursor.com off its CMS. The punchline: Cursor was spending $56K on CMS CDN costs. Fifty-six thousand dollars. For serving images on a docs site.
+
+His fix was dead simple. Object storage. A basic upload GUI. A few API routes. Done.
+
+I read that and thought: this should ship in the template.
+
+Null MDX has an optional Supabase Storage integration. Optional is the key word. Don't set the env vars and everything falls back to a local `/images/` directory. Set them and you get:
+
+- Full CRUD API at `/api/null-mdx/assets` (upload, list, delete)
+- Individual asset serving with proper MIME types and 1-year immutable caching
+- `getOptimizedImageUrl` that generates Supabase image transform URLs with width/quality params
+- A drag-and-drop asset manager UI at `/assets` with grid view, copy URL, delete
+
+Blog cards and MDX image components use the optimized URLs automatically. Zero manual image optimization. The "simple GUI on top of object storage" that Lee described building in a few prompts - Null MDX ships it out of the box.
+
+**Multi-Zone: two templates, one domain**
+
+This is where it gets architecturally interesting.
+
+Null MDX is the content engine. It compiles MDX and serves docs/blog pages. But it's not meant to be your entire site. That's where Null Proxy comes in.
+
+```
+User hits your-domain.com
+         |
+    Null Proxy
+    |    |    |
+    /    /docs  /blog
+    |    |       |
+  Landing  Null MDX  Null MDX
+  Page    (docs mode) (blog mode)
+```
+
+Null Proxy is a separate Next.js app that handles routing. It serves your landing page locally and proxies `/docs/*` and `/blog/*` requests to Null MDX via Next.js rewrites. Users see one domain. You deploy two apps. Update docs without touching the landing page. Redesign the landing page without rebuilding docs.
+
+This is the Next.js Multi-Zone pattern, but packaged as something you can actually deploy in minutes instead of spending a week configuring rewrites and asset prefixes.
+
+**The "null" philosophy**
+
+I named it Null MDX because the whole point is starting from zero. No opinions about your design. No bloated feature set to disable. No proprietary content format to learn.
+
+Your content is `.mdx` files in a folder. Your config is one TypeScript file. Your styling is Tailwind v4 + shadcn/ui. Everything is standard. Everything is swappable. Nothing is locked in.
+
+The template is a foundation, not a product. Build on top of it or tear it apart - either way, it's MIT licensed and it's yours.
+
+**What this means for v0**
+
+The bigger thing here isn't Null MDX specifically. It's what the new v0 VM enables.
+
+Before February 2026, v0 templates were limited to what you could do without a real runtime. Now? Any npm package that runs on Node.js can run in v0. Compilers. Bundlers. Image processors. Database clients. The full ecosystem.
+
+Null MDX is proof of concept for that shift. The first template that requires a real compilation runtime and actually gets one. I don't think it'll be the last.
+
+If you're building v0 templates: the constraints are gone. Build the thing you thought wasn't possible. It probably is now.
+
+---
+
+Null MDX: https://v0.app/templates/null-mdx-OSVvIj4RBu8
+Null Proxy: https://v0.app/templates/null-proxy-4PQrDpMpnP5
+Live: https://null-mdx.vercel.app
+GitHub: https://github.com/headline-design/null-mdx
 
 ---
 
